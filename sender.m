@@ -1,21 +1,15 @@
-% Paramètre système
-K = 4;    % nombre de modules
-N = 4;    % nombre de ressources physique
 % Paramètres émetteur
-M = 10;   % nombre de bits
-R = 10;   % débit binaire bits/s
-Tb = 1/R; % durée d'un bit
-
-% Paramètres du FIR
-alpha = 0; % facteur de 'rolloff'
-L = 2;     % largeur de bande xTb
-
-beta = 4*N-2; % suréchantillonage (donnée dans l'énoncé)
+M = 10;     % nombre de bits
+R = 10;     % débit binaire bits/s
+Tb = 1/R;   % durée d'un bit
+roll = 0;   % facteur de 'rolloff'
+L = 2;      % largeur de bande xTb
+beta = 4*N; % suréchantillonage (donnée dans l'énoncé)
 Tn = 1/beta*Tb; % nouvelle fréquence d'échantillonage
-fir = rcosdesign(0, 2, beta/2); % filtre en cosinus surélevé
+fir = rcosdesign(roll, 2, beta);
 
-quafreqs = 2*pi*2*(0:N-1)'/Tb; % fréquences des porteuses
-quarries = cos(quafreqs*linspace(0,1,1/Tn));
+carfreq = (0:N-1)'*L/Tb; % fréquences des porteuses
+carrier = cos(carfreq*linspace(0, 2*pi, 1/Tn))';
 
 % fonction qui map 0,1 en -1,1
 codesymbol = @(x)x.*2-1;
@@ -26,19 +20,27 @@ al = upsample(a, beta);
 %x = x + randn(size(x))*1e-2;  % add noise
 s = filter(fir, 1, al);
 
-sfft = fft(s);
-sfft(1/(M*Tn)+1:end,:) = 0; % filtre passe-bas "à la brute"
-sLow = ifft(sfft);
+sHigh = s .* carrier;
+sHighFFT = fft(sHigh);
+sHighFFTfiltered = sHighFFT;
 
-sLow = sLow .* quarries';
-sLowFFT = fft(sLow);
+for x = 1:N
+    sHighFFTfiltered(carfreq(x)+1/Tb+1:end/2, x) = 0;
+    sHighFFTfiltered(1:carfreq(x)-1/Tb, x) = 0;
+    
+    sHighFFTfiltered(end-carfreq(x)+1/Tb+2:end, x) = 0;
+    sHighFFTfiltered(end/2: end-carfreq(x)-1/Tb+1, x) = 0;
+end
 
-subplot(2,1,1)
-stem(sLow(:,1)+...
-     sLow(:,2)+...
-     sLow(:,3)+...
-     sLow(:,4));
+subplot(2,2,1)
+stem(sHigh)
 grid
-subplot(2,1,2)
-stem(abs(sLowFFT)/(M*beta))
+subplot(2,2,3)
+stem(abs(sHighFFT)/(M*beta))
+grid
+subplot(2,2,2)
+stem(ifft(sHighFFTfiltered))
+grid
+subplot(2,2,4)
+stem(abs(sHighFFTfiltered)/(M*beta))
 grid
