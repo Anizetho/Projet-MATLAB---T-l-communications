@@ -1,5 +1,5 @@
-% Paramètre receiver
-% aucun...
+% Receiver parameters
+% none...
 
 sHighFFT = fft(data);
 
