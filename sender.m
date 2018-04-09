@@ -18,7 +18,6 @@ codesymbol = @(x)x.*2-1;
 
 x = randi([0 1], M, N);
 a = codesymbol(x);
-%x = x + randn(size(x))*1e-2;  % add noise
 s = upfirdn(a, fir, beta);
 
 % transmission length
