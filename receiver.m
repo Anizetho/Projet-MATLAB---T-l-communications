@@ -1,12 +1,11 @@
+% This work is licensed under the Creative Commons
+% Attribution-NonCommercial-NoDerivatives 4.0 International License.
+% To view a copy of this license, visit
+% http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
+% Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+%
 % Receiver parameters
-% none...
-
+% none yet...
 sHighFFT = fft(data);
 
-for n = 1:N
-    if n == 1
-        z(:,n) = sHighFFT(1:1/Tb);
-    else
-        z(:,n) = sHighFFT(carfreq(n)-1/Tb+1:carfreq(n)+1/Tb);
-    end
-end
+% TODO: separate spectrum
