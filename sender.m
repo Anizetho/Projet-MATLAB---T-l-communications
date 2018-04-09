@@ -1,13 +1,13 @@
-% Paramètres émetteur
-R = 10;         % débit binaire bit/s
-Tb = 1/R;       % durée d'un bit
-roll = 0;       % facteur de 'rolloff'
-L = 1;          % largeur de bande xTb
-beta = 4*N;     % suréchantillonage (donnée dans l'énoncé)
-Tn = Tb/beta;   % nouvelle fréquence d'échantillonage
+% Sender parameters
+R = 10;         % bit rate
+Tb = 1/R;       % bit duration
+roll = 0;       % rolloff factor
+L = 1;          % bandwidth xTb
+beta = 4*N;     % upsampling factor
+Tn = Tb/beta;   % upsample sampling rate
 fir = rcosdesign(roll, 6, beta);
 
-% fonction qui map 0,1 en -1,1
+% handle which maps 0,1 to -1,1
 codesymbol = @(x)x.*2-1;
 
 x = randi([0 1], M, N);
@@ -15,26 +15,28 @@ a = codesymbol(x);
 %x = x + randn(size(x))*1e-2;  % add noise
 s = upfirdn(a, fir, beta);
 
-% longueur de transmission
+% transmission length
 len = size(s, 1);
 
-carfreq = (0:N-1)'*2*L/Tb; % fréquences des porteuses
+carfreq = (0:N-1)'*2*L/Tb; % carriers frequencies
 carrier = cos(carfreq/(len*Tn)*linspace(0, 2*pi*len*Tn, len))';
 
 sHigh = s .* carrier;
 sHighFFT = fft(sHigh);
 
-% cut the one-sided spectrum
-sHighFFTb = sHighFFT(1:ceil(end/2)+1,:);
-
-for n = 1:N
-    % filtre passe-bande "à la brute"
-    sHighFFTb(1:carfreq(n)-L*1/Tb,n) = 0;
-    sHighFFTb(carfreq(n)+L*1/Tb+1:end,n) = 0;
+% When the message contains one bit, the frequency sprectrum
+% cannot be split in two. No filter is needed.
+if M ~= 1
+    % cut the one-sided spectrum
+    sHighFFTb = sHighFFT(1:ceil(end/2)+1,:);
+    for n = 1:N
+        % barbarian bandpass filter
+        sHighFFTb(1:carfreq(n)-L*1/Tb,n) = 0;
+        sHighFFTb(carfreq(n)+L*1/Tb+1:end,n) = 0;
+    end
+    % recreate the two-sided sprectum
+    sHighFFTb = vertcat(sHighFFTb, conj(flipud(sHighFFTb(2:end-2,:))));
 end
-
-% recreate the two-sided sprectum
-sHighFFTb = vertcat(sHighFFTb, conj(flipud(sHighFFTb(2:end-1,:))));
 
 subplot(2,2,1)
 stem(sHigh)
