@@ -36,7 +36,7 @@ if M ~= 1
     % cut the one-sided spectrum
     sHighFFTb = sHighFFT(1:ceil(end/2)+1,:);
     for n = 1:N
-        % barbarian bandpass filter
+        % bandpass filter
         sHighFFTb(1:carfreq(n)-L*1/Tb,n) = 0;
         sHighFFTb(carfreq(n)+L*1/Tb+1:end,n) = 0;
     end
@@ -59,3 +59,6 @@ stem(abs(sHighFFTb)/(M*beta))
 grid
 
 data = sum(sHighb, 2);
+
+% delete tempory variables
+clear('-regexp', 'sHigh*');

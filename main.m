@@ -5,7 +5,7 @@
 % Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 %
 % System parameters
-K = 4;    % nombre de modules
-N = 2;    % nombre de ressources physique
-M = 10;   % nombre de bits
+K = 4;    % modules number
+N = 2;    % available channels
+M = 10;   % message size (bits)
 sender
