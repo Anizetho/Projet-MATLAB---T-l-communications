@@ -85,7 +85,7 @@ grid
 
 subplot(2,2,4)
 stem(linspace(0, 1/Tn-1, len), abs(sHighFFTb)/len)
-title('Représentation fréquentielle de la transmission non-filtrée')
+title('Représentation fréquentielle de la transmission filtrée')
 xlabel('Frequency (Hz)')
 ylabel('|Amplitude| (v)')
 legend('Canal 1 filtré', 'Canal 2 filtré', 'Location', 'North')
@@ -94,5 +94,5 @@ grid
 %% sum all channels before transmission
 data = sum(sHighb, 2);
 
-% delete tempory variables
+% delete temporary variables
 clear('-regexp', 'sHigh*');
