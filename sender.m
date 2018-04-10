@@ -7,7 +7,7 @@
 % Sender parameters
 R = 10;         % bit rate
 Tb = 1/R;       % bit duration
-roll = 0.00;    % rolloff factor
+roll = 0.50;    % rolloff factor
 L = 1;          % bandwidth xTb
 beta = 4*N;     % upsampling factor
 Tn = Tb/beta;   % upsample sampling rate
@@ -26,15 +26,17 @@ carfreq = (0:N-1)'*2*L*(1+roll)/Tb; % carrier frequencies
 carrier = cos(carfreq*linspace(0, 2*pi*len*Tn, len))';
 
 %% plot impulsions
-plot(linspace(0, span/(1e2), 1e2*span+1), ...
-     rcosdesign(roll, span, 1e2)' * ones(1, N) .* ...
-     cos(carfreq*linspace(0, 2*pi, span*1e2+1))');
+iX = linspace(0, span/1e2, 1e2*span+1);
+iY = rcosdesign(roll, span, 1e2);
+plot(iX, iY' * ones(1, N) .* ...
+     cos(carfreq*linspace(0, 2*pi, span*1e2+1))')
 title("Représentation temporelle des impulsions utilisées")
 xlabel("Temps (s)")
-ylim([-0.11 +0.11])
+ylim([-max(iY)*1.1 +max(iY)*1.1])
 ylabel("Coefficient d'amplitude")
 legend(strcat("Canal ", num2str((1:N)')))
 grid
+clear('iX', 'iY')
 
 %% modulate by carriers and filter bandwidths
 sHigh = s .* carrier;
@@ -95,4 +97,4 @@ grid
 data = sum(sHighb, 2);
 
 % delete temporary variables
-clear('-regexp', 'sHigh*');
+clear('-regexp', 'sHigh*')
