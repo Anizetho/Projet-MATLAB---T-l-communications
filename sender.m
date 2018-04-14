@@ -1,13 +1,12 @@
-% This work is licensed under the Creative Commons
-% Attribution-NonCommercial-NoDerivatives 4.0 International License.
-% To view a copy of this license, visit
-% http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to
+% This work is licensed under the Creative Commons Attribution 4.0
+% International License. To view a copy of this license, visit
+% http://creativecommons.org/licenses/by/4.0/ or send a letter to
 % Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 %
 % Sender parameters
 R = 10;         % bit rate
 Tb = 1/R;       % bit duration
-roll = 0.50;    % rolloff factor
+roll = 0.00;    % rolloff factor
 L = 1;          % bandwidth xTb
 beta = 4*N;     % upsampling factor
 Tn = Tb/beta;   % upsample sampling rate
