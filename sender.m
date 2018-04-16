@@ -3,7 +3,7 @@
 % http://creativecommons.org/licenses/by/4.0/ or send a letter to
 % Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 %
-% Sender parameters
+% Sender
 R = 10;         % bit rate
 Tb = 1/R;       % bit duration
 roll = 0.50;    % rolloff factor
@@ -45,16 +45,17 @@ sHighFFT = fft(sHigh, 2^nextpow2(len));
 figure
 subplot(2,1,1)
 stem(linspace(0, len*Tn, len), sHigh)
-title('Représentation temporelle de la transmission non-filtrée')
+title('Représentation temporelle de la transmission')
 xlabel('Times (s)')
 ylabel('Amplitude (v)')
-legend('Canal 1', 'Canal 2', 'Location', 'SouthEast')
+legend('Canal 1', 'Canal 2', 'Location', 'SouthWest')
 grid
 
 subplot(2,1,2)
-plot(linspace(0, 1/Tn-1, 2^nextpow2(len)), 20*log10(abs(sHighFFT)/len))
+plot(linspace(0, 1/Tn-1, 2^nextpow2(len)), ...
+     20*log10(abs(sHighFFT)/2^nextpow2(len)))
 ylim([-60 0])
-title('Représentation fréquentielle de la transmission non-filtrée')
+title('Représentation fréquentielle de la transmission')
 xlabel('Frequency (Hz)')
 ylabel('Puissance (dBm)')
 legend('Canal 1', 'Canal 2', 'Location', 'North')
