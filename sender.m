@@ -39,7 +39,7 @@ clear('iX', 'iY')
 
 %% modulate by carriers and filter bandwidths
 sHigh = s .* carrier;
-sHighFFT = fft(sHigh);
+sHighFFT = fft(sHigh, 4*len);
 
 %% plot visual representation of the transmission
 figure
@@ -52,10 +52,11 @@ legend('Canal 1 non-filtré', 'Canal 2 non-filtré', 'Location', 'SouthEast')
 grid
 
 subplot(2,1,2)
-stem(linspace(0, 1/Tn-1, len), abs(sHighFFT)/len)
+plot(linspace(0, 1/Tn-1, 4*len), 20*log10(abs(sHighFFT)/len))
+ylim([-60 0])
 title('Représentation fréquentielle de la transmission non-filtrée')
 xlabel('Frequency (Hz)')
-ylabel('|Amplitude| (v)')
+ylabel('Puissance (dBm)')
 legend('Canal 1 non-filtré', 'Canal 2 non-filtré', 'Location', 'North')
 grid
 
