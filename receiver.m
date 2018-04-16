@@ -12,5 +12,18 @@ sHighFFT = sHighFFT(1:ceil(end/2)+1,:);
 sHighFFT = sHighFFT * ones(1, N);
 % calculate the bandwidth limits for each channel
 cutoff = [carfreq-L/Tb carfreq+L/Tb];
+% pre-allocate filters vector
+ns = size(cutoff, 2);
+H = cell(ns, 1);
+% first channel lowpass
+H{1} = design(fdesign.lowpass('N,F3db', 30, cutoff(1,2), 1/Tn), 'butter');
+fdata(:,1) = filter(H{1}, data);
+% others channels bandpass
+for n = 2:ns
+    H{n} = design(fdesign.bandpass('N,F3dB1,F3dB2', 30, cutoff(n,1), ...
+                                   cutoff(n,2), 1/Tn), 'butter');
+    fdata(:,n) = filter(H{n}, data);
+end
 
-% TODO: separate spectrum
+
+

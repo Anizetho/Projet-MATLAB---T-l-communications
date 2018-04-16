@@ -7,4 +7,7 @@
 K = 4;    % module number
 N = 2;    % available channels
 M = 10;   % message size (bits)
+% generate data and send it
 sender
+% filter data and read it
+receiver
