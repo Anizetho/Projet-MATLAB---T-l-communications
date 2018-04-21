@@ -31,17 +31,28 @@ figure
 subplot(2,1,1)
 stem(linspace(0, len*Tn, len), sHigh)
 title('Représentation temporelle du signal reçu')
-xlabel('Times (s)')
-ylabel('Amplitude (v)')
+xlabel('Times (s)'), ylabel('Amplitude (v)')
 legend('Canal 1', 'Canal 2', 'Location', 'SouthWest')
 grid
 
 subplot(2,1,2)
 plot(linspace(0, 1/Tn-1, len), 20*log10(abs(fft(sHigh))/len))
-ylim([-60 0])
-xlim([0 79])
+ylim([-60 0]), xlim([0 79])
 title('Représentation fréquentielle du signal reçu')
-xlabel('Frequency (Hz)')
-ylabel('Puissance (dBv)')
+xlabel('Frequency (Hz)'), ylabel('Puissance (dBv)')
 legend('Canal 1', 'Canal 2', 'Location', 'North')
 grid
+
+%% decode data from signal
+halfspan = span*beta/2;
+s2t = s2;
+% remove right and left halfspan's
+s2t(1:halfspan,:) = [];
+s2t(end-halfspan+1:end,:) = [];
+% generate the indice vector
+s2i = kron(ones(1, (size(s2t, 1)+beta-1)/8), [1 zeros(1,beta-1)]);
+s2i(end-beta+2:end) = [];
+decoded = s2t(s2i~=0,:);
+% round the extracted value
+decoded(decoded>0) = 1;
+decoded(decoded<=0) = 0;

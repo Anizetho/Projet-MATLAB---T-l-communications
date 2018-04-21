@@ -26,13 +26,12 @@ sender
 % filter data and read it
 receiver
 
-figure
-hold on
-stem(linspace(0, len*Tn, len), s(:,1)*(4/sqrt(2)));
+% compare the generate signal in sender to the extracted signal in receiver
+figure, hold on
+stem(linspace(0, len*Tn, len), s1(:,1)*(4/sqrt(2)));
 stem(linspace(0, len*Tn, len), s2(:,1));
 title('Comparaison entre signal envoyé et signal recomposé dans le receveur')
 xlabel('Temps de transmission (s)')
 ylabel('Amplitude du signal')
 legend('Envoyé', 'Recomposé')
-grid
-hold off
+grid, hold off

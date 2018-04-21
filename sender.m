@@ -8,8 +8,8 @@ codesymbol = @(x)x.*2-1;
 
 x = randi([0 1], M, N);
 a = codesymbol(x);
-s = upfirdn(a, fir, beta);
-len = size(s, 1);
+s1 = upfirdn(a, fir, beta);
+len = size(s1, 1);
 
 carfreq = (0:N-1)'*L*2/Tb; % carrier frequencies
 carrier = cos(carfreq*linspace(0, 2*pi*len*Tn, len))';
@@ -19,16 +19,15 @@ iX = linspace(0, span/1e2, 1e2*span+1);
 iY = rcosdesign(roll, span, 1e2);
 plot(iX, iY' * ones(1, N) .* ...
      cos(carfreq*linspace(0, 2*pi, span*1e2+1))')
-title("Représentation temporelle des impulsions utilisées")
-xlabel("Temps (s)")
 ylim([-max(iY)*1.1 +max(iY)*1.1])
-ylabel("Coefficient d'amplitude")
+title("Représentation temporelle des impulsions utilisées")
+ylabel("Coefficient d'amplitude"), xlabel("Temps (s)")
 legend(strcat("Canal ", num2str((1:N)')))
 grid
 clear('iX', 'iY')
 
 %% modulate by carriers
-sHigh = s .* carrier;
+sHigh = s1 .* carrier;
 sHighFFT = fft(sHigh);
 
 %% plot visual representation of the transmission
@@ -36,18 +35,15 @@ figure
 subplot(2,1,1)
 stem(linspace(0, len*Tn, len), sHigh)
 title('Représentation temporelle du signal envoyé')
-xlabel('Times (s)')
-ylabel('Amplitude (v)')
+ylabel('Amplitude (v)'), xlabel('Times (s)')
 legend('Canal 1', 'Canal 2', 'Location', 'SouthWest')
 grid
 
 subplot(2,1,2)
 plot(linspace(0, 1/Tn-1, len), 20*log10(abs(sHighFFT)/len))
-ylim([-60 0])
-xlim([0 79])
+ylim([-60 0]), xlim([0 79])
 title('Représentation fréquentielle du signal envoyé')
-xlabel('Frequency (Hz)')
-ylabel('Puissance (dBv)')
+ylabel('Puissance (dBv)'), xlabel('Frequency (Hz)')
 legend('Canal 1', 'Canal 2', 'Location', 'North')
 grid
 
