@@ -2,7 +2,7 @@
 % International License. To view a copy of this license, visit
 % http://creativecommons.org/licenses/by/4.0/ or send a letter to
 % Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
-%
+close all,
 % System
 K = 4;          % module number
 N = 2;          % available channels
@@ -16,10 +16,8 @@ beta = 4*N;     % upsampling factor
 Tn = Tb/beta;   % upsample sampling rate
 span = 20;      % FIR span for thinner bandwidth consumption
 fir = rcosdesign(roll, span, beta);
-
-% DSP window
-% SA = dsp.SpectrumAnalyzer(1);
-% SA.SampleRate = 1/Tn;
+% Canal
+Z0 = 50;        % characteristic impedance
 
 % generate data and send it
 sender
@@ -27,11 +25,20 @@ sender
 receiver
 
 % compare the generate signal in sender to the extracted signal in receiver
-figure, hold on
-stem(linspace(0, len*Tn, len), s1(:,1)*(4/sqrt(2)));
-stem(linspace(0, len*Tn, len), s2(:,1));
-title('Comparaison entre signal envoyé et signal recomposé dans le receveur')
+figure
+subplot(2,1,1)
+stem(linspace(0, len*Tn, len), s1(:,1));
+title('Signal normalisé envoyé dans l''émeteur')
 xlabel('Temps de transmission (s)')
 ylabel('Amplitude du signal')
-legend('Envoyé', 'Recomposé')
-grid, hold off
+grid
+
+subplot(2,1,2)
+stem(linspace(0, len*Tn, len), s2(:,1), 'Color', [0.85 0.33 0.1]);
+title('Signal recomposé dans le receveur')
+xlabel('Temps de transmission (s)')
+ylabel('Amplitude du signal')
+grid
+
+% tell me the truth, doctor
+all((x-decoded)==0)
