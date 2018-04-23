@@ -8,7 +8,8 @@ codesymbol = @(x)x.*2-1;
 
 x = randi([0 1], M, N);
 a = codesymbol(x);
-s1 = upfirdn(a, fir, beta);
+rcos = rcosdesign(roll, span, beta);
+s1 = upfirdn(a, rcos, beta);
 len = size(s1, 1);
 
 carfreq = (0:N-1)'*L*2/Tb; % carrier frequencies
@@ -29,8 +30,8 @@ carrier = cos(carfreq*linspace(0, 2*pi*len*Tn, len))';
 %% modulate by carriers
 s1High = s1 .* carrier;
 
-% normalise power to 20dBm
-avgPower = bandpower(s1High)/Z0*(1000/20);
+% normalise power to 'pwr' dBm
+avgPower = bandpower(s1High)/Z0*(1000/pwr);
 s1High = s1High./sqrt(avgPower*Z0);
 
 %% plot visual representation of the transmission

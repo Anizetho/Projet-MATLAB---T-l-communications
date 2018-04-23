@@ -2,23 +2,9 @@
 % International License. To view a copy of this license, visit
 % http://creativecommons.org/licenses/by/4.0/ or send a letter to
 % Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
-close all,
-% System
-K = 4;          % module number
-N = 2;          % available channels
-M = 45;         % message size (bits)
-% Sender
-R = 10;         % bit rate
-Tb = 1/R;       % bit duration
-roll = 0.00;    % rolloff factor
-L = 1;          % bandwidth xTb
-beta = 4*N;     % upsampling factor
-Tn = Tb/beta;   % upsample sampling rate
-span = 20;      % FIR span for thinner bandwidth consumption
-fir = rcosdesign(roll, span, beta);
-% Canal
-Z0 = 50;        % characteristic impedance
+close all
 
+parameters
 % generate data and send it
 sender
 % filter data and read it

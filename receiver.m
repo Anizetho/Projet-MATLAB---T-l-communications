@@ -21,10 +21,10 @@ end
 % demodulate
 s2 = s2High ./ carrier;
 % filter the canal noise with the adequate filter
-delay = mean(grpdelay(fir));
-s2 = vertcat(s2, zeros(delay, N)); % add after time
-s2 = filter(fir, 1, s2);           % filter and dephase
-s2(1:delay, :) = [];               % remove before time
+delay = mean(grpdelay(rcos));
+s2 = vertcat(s2, zeros(delay, N));  % add after time
+s2 = filter(rcos, 1, s2);           % filter and dephase
+s2(1:delay, :) = [];                % remove before time
 
 %% plot visual representation of the transmission
 figure
