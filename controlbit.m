@@ -47,7 +47,7 @@ function padded = addBit(unpadded, position)
 required = mod(numel(unpadded), position);
 if required ~= 0
     % the result of unpadded/position must be an integer
-    unpadded = [unpadded; zeros(required, 1)];
+    unpadded = [unpadded; zeros(position-required, 1)];
 end
 padded = reshape(unpadded, position, []);
 padded(position+1,:) = 0;

@@ -4,11 +4,13 @@
 % Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
 x = randi([0 1], M, N);
+% append the control bits
+x = controlbit(x, 7);
+% append the start sequence and start bit
+x = [startSeq'*ones(1, N); zeros(1, N); x];
 a = codesymbol(x);
-rcos = rcosdesign(roll, span, beta);
-% append start sequence
-a = [startSeq*ones(1, N); a];
 % shape to impulse
+rcos = rcosdesign(roll, span, beta);
 s1 = upfirdn(a, rcos, beta);
 len1 = size(s1, 1);
 
