@@ -3,10 +3,14 @@
 % http://creativecommons.org/licenses/by/4.0/ or send a letter to
 % Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
+rng('default');
+codesymbol = @(x)x.*2-1;
+
 % System
 K = 4;          % module number
 N = 2;          % available channels
 M = 45;         % message size (bits)
+
 % Sender
 R = 10;         % bit rate
 Tb = 1/R;       % bit duration
@@ -16,5 +20,10 @@ beta = 4*N;     % upsampling factor
 Tn = Tb/beta;   % upsample sampling rate
 span = 20;      % rcos span for thinner bandwidth consumption
 pwr = 20;       % channel power in dBm
-% Canal
+
+% Channel
 Z0 = 50;        % characteristic impedance
+shift = 0;      % samples delay
+
+% Receiver
+startSeq = codesymbol([1 0 1 0 1 0 1 1 1 1])';
