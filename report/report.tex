@@ -26,6 +26,11 @@
 \usepackage{caption}
     \captionsetup{labelfont={bf,sf,color=gray}}
 \usepackage{pdfpages}
+\usepackage{pgfplots}
+	\pgfplotsset{compat=newest}
+	\pgfplotsset{plot coordinates/math parser=false}
+	\newlength\figureheight
+	\newlength\figurewidth
 
 % Keep lasts
 \usepackage[french]{babel}
@@ -66,6 +71,31 @@
 \maketitle
 
 \section*{Introduction}
+
+\begin{figure}[htbp]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\input{figures/mod_nofilter.tex}
+	}
+	\caption{Signal non-modulé dans l'émetteur.}
+\end{figure}
+\begin{figure}[htbp]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\input{figures/mod_nodelay.tex}
+	}
+	\caption{Signal démodulé dans le receveur sans avoir pris en compte
+			le déphasage de la porteuse.}
+\end{figure}
+\begin{figure}[htbp]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\input{figures/mod_filter.tex}
+	}
+	\caption{Signal démodulé dans le receveur en essayant de compenser le
+			déphasage de la porteuse en la filtrant également.}
+\end{figure}
+
 \section*{Conclusion}
 
 \end{document}
