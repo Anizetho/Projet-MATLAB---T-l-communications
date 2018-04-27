@@ -8,7 +8,7 @@ codesymbol = @(x)x.*2-1;
 
 % System
 K = 4;          % module number
-N = 2;          % available channels
+N = 3;          % available channels
 M = 45;         % message size (bits)
 
 % Sender
@@ -16,7 +16,7 @@ R = 10;         % bit rate
 Tb = 1/R;       % bit duration
 roll = 0.40;    % rolloff factor
 L = 1;          % bandwidth xTb
-beta = 4*N;     % upsampling factor
+beta = 4*N*L;   % upsampling factor
 Tn = Tb/beta;   % upsample sampling rate
 span = 20;      % rcos span for thinner bandwidth consumption
 pwr = 20;       % channel power in dBm

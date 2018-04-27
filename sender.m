@@ -6,8 +6,8 @@
 x = randi([0 1], M, N);
 % append the control bits
 x = controlbit(x, 7);
-% append the start sequence and start bit
-x = [startSeq'*ones(1, N); zeros(1, N); x];
+% append the start sequence
+x = [startSeq'*ones(1, N); x];
 a = codesymbol(x);
 % shape to impulse
 rcos = rcosdesign(roll, span, beta);
@@ -42,15 +42,15 @@ subplot(2,1,1)
 stem(linspace(0, len1*Tn, len1), s1High)
 title('Représentation temporelle du signal envoyé')
 ylabel('Amplitude (v)'), xlabel('Times (s)')
-legend('Canal 1', 'Canal 2', 'Location', 'SouthWest')
+legend(strcat("Canal ", num2str((1:N)')), 'Location', 'SouthWest')
 grid
 
 subplot(2,1,2)
 plot(linspace(0, 1/Tn-1, len1), pow2db(abs(fft(s1High/len1)).^2/Z0)+30)
-ylim([-60 10]), xlim([0 79])
+ylim([-60 10])
 title('Représentation fréquentielle du signal envoyé')
 ylabel('Puissance (dBm)'), xlabel('Frequency (Hz)')
-legend('Canal 1', 'Canal 2', 'Location', 'North')
+legend(strcat("Canal ", num2str((1:N)')), 'Location', 'North')
 grid
 
 %% sum all channels before transmission
