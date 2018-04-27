@@ -24,21 +24,11 @@ for n = 1:N
     s2High(:,n) = filter(H{n}, data);
 end
 
-delay = finddelay(s1High(:,1), s2High(:,1));
 
 % calculate the new time vector size accounting for the filters padding
 len2 = size(data, 1);
 % generate localy the dephased carrier
 carrier = cos(carfreq*linspace(0, 2*pi*len2*Tn, len2))';
-
-xc = []; lg = [];
-for n = 1:N
-    [axc, alg] = xcorr(carrier(:,n), s2High(:,n));
-    xc = [xc axc];
-    lg = [lg alg'];
-end
-[~, blo] = max(xc);
-blu = lg(blo);
 
 % demodulate
 s2 = s2High ./ carrier;
@@ -51,16 +41,17 @@ s2(1:rcosdelay, :) = [];         % remove before time
 % find the start trame
 lagDiff = zeros(1, N);
 start_t = upfirdn(codesymbol(startSeq), rcos, beta);
-start_t = start_t(:,1:end-span/2*beta-1);
+start_t = start_t(:,1:end-span/2*beta);
 for n = 1:N
     [acor,lag] = xcorr(s2(:,n), start_t);
     [~, I] = max(acor);
     lagDiff(n) = lag(I);
-end
-clear acor lag I
-lagDiff = lagDiff+numel(start_t);
-% compensate the start trame
+end, clear acor lag I
+% compensate the delay
 s2t = s2(lagDiff(1:N):end, :);
+% compensate the start trame
+s2t = s2t(span/2*beta+1:end, :);
+s2t = s2t(numel(startSeq)*beta+1:end, :);
 
 %% plot visual representation of the transmission
 figure
@@ -80,15 +71,10 @@ legend(strcat("Canal ", num2str((1:N)')), 'Location', 'North')
 grid
 
 %% decode data from signal
-% remove upsampling offset
-s2t = s2t(beta+1:end,:);
-% remove left halfspan's
-halfspan = span/2*beta;
-s2t(end-halfspan-3*beta-1+7:end,:) = [];
-% generate the indice vector
-s2i = kron(ones(1, size(s2t, 1)/8), [1 zeros(1,beta-1)]);
-s2i(end-beta+2:end) = [];
+% generate the index vector
+s2i = kron(ones(1, lena), [1 zeros(1,beta-1)]);
+% extract the values at index
 decoded = s2t(s2i~=0,:);
-% round the extracted value
+% quantize the extracted values
 decoded(decoded>0) = 1;
 decoded(decoded<=0) = 0;

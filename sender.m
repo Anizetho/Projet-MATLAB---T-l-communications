@@ -9,6 +9,7 @@ x = controlbit(x, 7);
 % append the start sequence
 x = [startSeq'*ones(1, N); x];
 a = codesymbol(x);
+lena = size(a, 1)-numel(startSeq);
 % shape to impulse
 rcos = rcosdesign(roll, span, beta);
 s1 = upfirdn(a, rcos, beta);
