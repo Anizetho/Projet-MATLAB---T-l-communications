@@ -16,10 +16,7 @@
     \titleformat*{\subsection}   {\color{gray}\large\bfseries\sffamily}
     \titleformat*{\subsubsection}{\color{gray}\large\bfseries\sffamily}
 \usepackage{geometry}
-%   \geometry{showframe}
     \geometry{scale={0.75,0.85}}
-%\usepackage{pgfplots}
-%    \pgfplotsset{compat=newest}
 \usepackage{siunitx}
     \sisetup{locale=FR}
 \usepackage{graphicx}
@@ -40,48 +37,76 @@
     \hypersetup{unicode, colorlinks, breaklinks, urlcolor=red,
                 bookmarksopen, bookmarksnumbered}
 
+% Generating plots is really time consuming
+\usepgfplotslibrary{external}
+	\tikzexternalize[prefix=figures/]
+
 \renewcommand{\UrlFont}{\small}
 \renewcommand{\arraystretch}{1.1}
 \newcommand{\important}[1]{\textbf{\textsf{\color{gray}{#1}}}}
 \setlength{\parskip}{2mm}
 
+\begin{document}
+
 \begin{titlepage}
-    \date{%
-        \today
-    }
-    \author{%
-        Alexis~\bsc{Nootens} \\
-        \href{mailto:16139@student.ecam.be}{16139@student.ecam.be}
-        \and
-        Thomas~\bsc{Anizet} \\
-        \href{mailto:14164@student.ecam.be}{14164@student.ecam.be}
-    }
-    \title{%
-        \color{gray}\LARGE\bfseries\sffamily
-        Projet MATLAB\textregistered{} 2018             \\[3mm]
-        \rm\sffamily\large
-        Simulation d'une ligne de transmission physique \\[7mm]
-        École Centrale des Arts et Métiers 		        \\
-        1200 Woluwe-Saint-Lambert				        \\
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/logo-ecam.png}\par
+    \vspace{1cm}
+
+    \rule{\linewidth}{1.5pt}%
+    \vspace{5mm}
+    {\rm\sffamily\LARGE Techniques de transmission et traitement du signal\par}
+    \vspace{3mm}
+    {\sffamily\bfseries\LARGE Simulation d’une chaîne de transmission\\
+    						  numérique avec Matlab\par}
+    \vspace{5mm}
+    \rule{\linewidth}{1.5pt}%
+    \vspace{1cm}
+
+    {\large%
+        \begin{minipage}[t]{0.35\linewidth}
+            \centering
+            Alexis~\bsc{Nootens} \\[1mm]
+            \href{mailto:16139@student.ecam.be}{16139@student.ecam.be}
+        \end{minipage}
+        \begin{minipage}[t]{0.35\linewidth}
+            \centering
+            Armen~\bsc{Hagopian} \\[1mm]
+            \href{mailto:14040@student.ecam.be}{14040@student.ecam.be}
+        \end{minipage}
+    \par}
+    \vspace{1cm}
+
+    {\large%
+        ECAM Brussels             \\[1mm]
+        Promenade de l'Alma 50    \\[1mm]
+        1200 Woluwe-Saint-Lambert \\[1mm]
         Belgique
-    }
+    \par}
+
+    \vfill
+    {\large\today\par}
 \end{titlepage}
 
-\begin{document}
-\maketitle
+%%%%%%%%%%%%%%%%
+\tableofcontents
+\newpage
 
-\section*{Introduction}
+%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
 
 \begin{figure}[htbp]
 	\centering
-	\resizebox{\textwidth}{!}{%
+	\resizebox{\textwidth}{5cm}{%
+		\tikzsetnextfilename{mod_nofilter}
 		\input{figures/mod_nofilter.tex}
 	}
 	\caption{Signal non-modulé dans l'émetteur.}
 \end{figure}
 \begin{figure}[htbp]
 	\centering
-	\resizebox{\textwidth}{!}{%
+	\resizebox{\textwidth}{5cm}{%
+		\tikzsetnextfilename{mod_nodelay}
 		\input{figures/mod_nodelay.tex}
 	}
 	\caption{Signal démodulé dans le receveur sans avoir pris en compte
@@ -89,13 +114,18 @@
 \end{figure}
 \begin{figure}[htbp]
 	\centering
-	\resizebox{\textwidth}{!}{%
+	\resizebox{\textwidth}{5cm}{%
+		\tikzsetnextfilename{mod_filter}
 		\input{figures/mod_filter.tex}
 	}
 	\caption{Signal démodulé dans le receveur en essayant de compenser le
-			déphasage de la porteuse en la filtrant également.}
+			déphasage de la porteuse en la filtrant également.
+			À noter que le signal s'allonge et que des parasites s'ajoutent
+			à l'extrémité finale.}
 \end{figure}
 
-\section*{Conclusion}
+\section{L'émetteur}
+
+\section{Conclusion}
 
 \end{document}
