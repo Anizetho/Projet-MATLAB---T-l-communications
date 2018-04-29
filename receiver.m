@@ -11,19 +11,23 @@ H = cell(N, 1);
 H{1} = design(fdesign.lowpass('N,F3db', 20, cutoff(1,2), 1/Tn), 'butter');
 % others channels bandpass
 for n = 2:N
-    H{n} = design(fdesign.bandpass('N,F3dB1,F3dB2', 20, ...
-        cutoff(n,1), cutoff(n,2), 1/Tn), 'butter');
+    H{n} = design(fdesign.bandpass('N,F3dB1,F3dB2', 40, ...
+                  cutoff(n,1), cutoff(n,2), 1/Tn), 'butter');
 end
 
-% add offset to account for max group delay
-maxgroupdelay = ceil(max(grpdelay(cell2mat(H))));
-data = [data; zeros(max(maxgroupdelay), 1)];
 % pre-allocate to please Matlab then filter
 s2High = zeros(size(data,1), N);
 for n = 1:N
-    s2High(:,n) = filter(H{n}, data);
+    s2High(:,n) = filtfilt(H{n}.sosMatrix, H{n}.ScaleValues, data);
 end
 
+% recreate localy the modulated start frame
+start_t = upfirdn(codesymbol(startSeq), rcos, beta)';
+start_t = start_t(1:end-span/2*beta,:);
+temp1 = size(start_t, 1);
+temp2 = cos(carfreq*linspace(0, 2*pi*temp1*Tn, temp1))';
+start_t = start_t .* temp2;
+lagDiff = finddelay(start_t, s2High);
 
 % calculate the new time vector size accounting for the filters padding
 len2 = size(data, 1);
@@ -33,25 +37,10 @@ carrier = cos(carfreq*linspace(0, 2*pi*len2*Tn, len2))';
 % demodulate
 s2 = s2High ./ carrier;
 % filter the canal noise with the adequate filter
-rcosdelay = mean(grpdelay(rcos));
-s2 = [s2; zeros(rcosdelay, N)];  % add after time
-s2 = filter(rcos, 1, s2);        % filter and dephase
-s2(1:rcosdelay, :) = [];         % remove before time
+s2 = filtfilt(rcos, 1, s2);
 
-% find the start trame
-lagDiff = zeros(1, N);
-start_t = upfirdn(codesymbol(startSeq), rcos, beta);
-start_t = start_t(:,1:end-span/2*beta);
-for n = 1:N
-    [acor,lag] = xcorr(s2(:,n), start_t);
-    [~, I] = max(acor);
-    lagDiff(n) = lag(I);
-end, clear acor lag I
-% compensate the delay
-s2t = s2(lagDiff(1:N):end, :);
 % compensate the start trame
-s2t = s2t(span/2*beta+1:end, :);
-s2t = s2t(numel(startSeq)*beta+1:end, :);
+s2t = s2(span/2*beta+numel(startSeq)*beta+1:end, :);
 
 %% plot visual representation of the transmission
 figure
