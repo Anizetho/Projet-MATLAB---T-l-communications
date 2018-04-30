@@ -37,6 +37,9 @@ s1High = s1 .* carrier;
 avgPower = bandpower(s1High)/Z0*(1000/pwr);
 s1High = s1High./sqrt(avgPower);
 
+% sum all channels before transmission
+data = sum(s1High, 2);
+
 %% plot visual representation of the transmission
 figure
 subplot(2,1,1)
@@ -53,6 +56,3 @@ title('Représentation fréquentielle du signal envoyé')
 ylabel('Puissance (dBm)'), xlabel('Frequency (Hz)')
 legend(strcat("Canal ", num2str((1:N)')), 'Location', 'North')
 grid
-
-%% sum all channels before transmission
-data = sum(s1High, 2);

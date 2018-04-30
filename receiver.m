@@ -42,6 +42,13 @@ s2 = filtfilt(rcos, 1, s2);
 % compensate the start trame
 s2t = s2(span/2*beta+numel(startSeq)*beta+1:end, :);
 
+% generate the index vector
+s2i = 1:beta:beta*lena-(beta-1);
+% extract the values at index
+decoded = s2t(s2i,:);
+% quantize the extracted values
+decoded = decoded>0;
+
 %% plot visual representation of the transmission
 figure
 subplot(2,1,1)
@@ -58,11 +65,3 @@ title('Représentation fréquentielle du signal reçu')
 ylabel('Puissance (dBm)'), xlabel('Frequency (Hz)')
 legend(strcat("Canal ", num2str((1:N)')), 'Location', 'North')
 grid
-
-%% decode data from signal
-% generate the index vector
-s2i = 1:beta:beta*lena-(beta-1);
-% extract the values at index
-decoded = s2t(s2i,:);
-% quantize the extracted values
-decoded = decoded>0;
