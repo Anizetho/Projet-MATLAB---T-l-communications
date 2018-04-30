@@ -8,10 +8,10 @@ cutoff = [carfreq-1/Tb carfreq+1/Tb];
 % pre-allocate filters vector
 H = cell(N, 1);
 % first channel lowpass
-H{1} = design(fdesign.lowpass('N,F3db', 20, cutoff(1,2), 1/Tn), 'butter');
+H{1} = design(fdesign.lowpass('N,F3db', 10, cutoff(1,2), 1/Tn), 'butter');
 % others channels bandpass
 for n = 2:N
-    H{n} = design(fdesign.bandpass('N,F3dB1,F3dB2', 40, ...
+    H{n} = design(fdesign.bandpass('N,F3dB1,F3dB2', 20, ...
                   cutoff(n,1), cutoff(n,2), 1/Tn), 'butter');
 end
 
@@ -61,9 +61,8 @@ grid
 
 %% decode data from signal
 % generate the index vector
-s2i = kron(ones(1, lena), [1 zeros(1,beta-1)]);
+s2i = 1:beta:beta*lena-(beta-1);
 % extract the values at index
-decoded = s2t(s2i~=0,:);
+decoded = s2t(s2i,:);
 % quantize the extracted values
-decoded(decoded>0) = 1;
-decoded(decoded<=0) = 0;
+decoded = decoded>0;

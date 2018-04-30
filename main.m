@@ -27,3 +27,9 @@ title('Signal recomposé dans le receveur')
 xlabel('Temps de transmission (s)')
 ylabel('Amplitude du signal')
 grid
+
+% report QS
+disp("Transmission sans erreurs :")
+disp(string(all(decoded==x(17:end,:))))
+disp("Taux d'erreurs :")
+disp(sum(xor(x(end-lena+1:end,:), decoded))/lena)
