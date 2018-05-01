@@ -12,7 +12,8 @@ a = codesymbol(x);
 lena = size(a, 1)-numel(startSeq);
 % shape to impulse
 rcos = rcosdesign(roll, span, beta);
-s1 = upfirdn(a, rcos, beta);
+a = upsample(a, beta);
+s1 = conv2(rcos, 1, a);
 len1 = size(s1, 1);
 
 carfreq = (0:N-1)'*L*2/Tb; % carrier frequencies

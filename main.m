@@ -22,7 +22,7 @@ ylabel('Amplitude du signal')
 grid
 
 subplot(2,1,2)
-stem(linspace(0, len2*Tn, len2), s2(:,1), 'Color', [0.85 0.33 0.1]);
+stem(linspace(0, len3*Tn, len3), s2(:,1), 'Color', [0.85 0.33 0.1]);
 title('Signal recomposé dans le receveur')
 xlabel('Temps de transmission (s)')
 ylabel('Amplitude du signal')

@@ -25,5 +25,6 @@ Z0 = 50;        % characteristic impedance
 shift = 0;      % samples delay
 
 % Receiver
+impulseL = 512;
 startSeq = [1 0 1 0 1 0 1 0 ... % test the channel response
             1 1 1 1 1 1 1 1];   % set an unique sequence

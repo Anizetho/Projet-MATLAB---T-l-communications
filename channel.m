@@ -16,5 +16,5 @@ variance = 1;
 std_dev = sqrt(variance);
 noise_3 = noise_2*std_dev;
 
-data = [zeros(1,shift); data];
-data = alpha*data+noise_3;
+%data = [zeros(1,shift); data];
+%data = alpha*data+noise_3;
