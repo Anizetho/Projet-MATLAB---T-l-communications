@@ -8,7 +8,7 @@ parameters
 % generate data and send it
 sender
 % add noise and delay
-%channel
+channel
 % filter data and read it
 receiver
 

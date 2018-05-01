@@ -23,8 +23,6 @@ len2 = size(data,1)+impulseL-1;
 % convolute the signal with the impulses responses
 s2High = conv2(data, 1, H);
 
-% find filters delay
-[~,i] = max(H);
 % demodulate
 s2(:,1) = s2High(:,1);
 for n = 2:N
@@ -33,8 +31,10 @@ end
 % filter the canal noise with the adequate filter
 s2 = conv2(rcos, 1, s2);
 
+% find filters delay
+[~,i] = max(H);
 % compensate the start trame
-s2t = s2(span*beta+i-4:end, :);
+s2t = s2(span*beta+i-2:end, :);
 % generate the index vector
 s2i = 1:beta:beta*size(x,1);
 % extract the values at index
