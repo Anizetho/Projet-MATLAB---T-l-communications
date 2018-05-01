@@ -30,8 +30,10 @@ carfreq = (0:N-1)'*L*2/Tb;
 % clear iX iY
 
 %% modulate by carriers
-carrier = cos(carfreq*linspace(0, 2*pi*len1*Tn, len1))';
-s1High = s1 .* carrier;
+s1High = s1(:,1);
+for n = 2:N
+    s1High(:,n) = modulate(s1(:,n), carfreq(n), 1/Tn);
+end
 
 % normalise power to 'pwr' dBm
 avgPower = bandpower(s1High)/Z0*(1000/pwr);

@@ -25,34 +25,28 @@ s2High = conv2(data, 1, H);
 
 % find filters delay
 [~,i] = max(H);
-% generate localy the dephased carrier
-t = zeros(N, len2);
-for n = 1:N
-    t(n,:) = linspace(i(n)*Tn, 2*pi*len2*Tn+i(n)*Tn, len2);
-end
-carrier = cos(carfreq.*t)';
 % demodulate
-s2 = s2High ./ carrier;
+s2(:,1) = s2High(:,1);
+for n = 2:N
+    s2(:,n) = demod(s2High(:,n), carfreq(n), 1/Tn);
+end
 % filter the canal noise with the adequate filter
 s2 = conv2(rcos, 1, s2);
-
-% bad things happen
-polarity = kron(ones(1,N),[1 -1]);
-s2 = s2 .* polarity(1:N);
 
 % compensate the start trame
 s2t = s2(span*beta+i-4:end, :);
 % generate the index vector
 s2i = 1:beta:beta*size(x,1);
-% hit markers
-figure, hold on
-stem(s2t(:,2))
-stem(s2i,s2t(s2i,2),'r*', 'MarkerSize', 8.0)
-grid, hold off
 % extract the values at index
 decoded = s2t(s2i,:);
 % quantize the extracted values
 decoded = decoded>0;
+
+% hit markers *PEW* *PEW*
+figure, hold on
+stem(s2t(:,2))
+stem(s2i,s2t(s2i,2),'r*', 'MarkerSize', 8.0)
+grid, hold off
 
 %% plot visual representation of the transmission
 figure
