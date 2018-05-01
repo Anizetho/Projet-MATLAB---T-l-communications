@@ -1,0 +1,12 @@
+# macOS temporary file
+.DS_Store
+# LaTeX temporary files
+*.aux
+*.auxlock
+*.out
+*.toc
+*.log
+*.synctex.gz
+# Externalize temporary files
+*.md5
+*.dpth
