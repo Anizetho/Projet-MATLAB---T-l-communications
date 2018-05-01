@@ -4,15 +4,15 @@
 % Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
 % calculate the bandwidth limits for each channel
-cutoff = [carfreq-1/Tb carfreq+1/Tb];
+cutoff = [carfreq-1/Tb carfreq+1/Tb]*2*Tn;
 % pre-allocate filters vector
 H = cell(N, 1);
 % first channel lowpass
-H{1} = design(fdesign.lowpass('N,F3db', 10, cutoff(1,2), 1/Tn), 'butter');
+H{1} = design(fdesign.lowpass('N,F3db', 10, cutoff(1,2)), 'butter');
 % others channels bandpass
 for n = 2:N
     H{n} = design(fdesign.bandpass('N,F3dB1,F3dB2', 20, ...
-                  cutoff(n,1), cutoff(n,2), 1/Tn), 'butter');
+                  cutoff(n,1), cutoff(n,2)), 'butter');
 end
 
 % pre-allocate to please Matlab then filter
