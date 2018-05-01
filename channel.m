@@ -4,9 +4,10 @@
 % Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
 % gaussian noise
-noise_1 = randn([numel(data)+shift 1]);
-noise_f = design(fdesign.lowpass('N,F3db', 10, 1/(2*Tn), 1/Tn), 'butter');
-noise_2 = filter(noise_f, noise_1);
+noise_1 = randn([numel(data) 1]);
+[bf,af] = butter(1, 0.5);
+noise_f = ifft(freqz(bf, af, impulseL, 'whole', 1/Tn));
+noise_2 = conv(noise_f, noise_1);
 
 % damping factor; between 0.60<=x<=0.90
 alpha = (0.90-0.60)*rand([1 1])+0.60;
@@ -16,5 +17,6 @@ variance = 1;
 std_dev = sqrt(variance);
 noise_3 = noise_2*std_dev;
 
-%data = [zeros(1,shift); data];
-%data = alpha*data+noise_3;
+temp = numel(noise_2)-numel(data);
+data = [zeros(temp,1); data];
+data = alpha*data+noise_3;
