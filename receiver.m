@@ -9,15 +9,13 @@ cutoff = [carfreq-1/Tb carfreq+1/Tb]*2*Tn;
 H = zeros(impulseL, N);
 
 % first channel lowpass
-[b1,a1] = butter(10, cutoff(1,2), 'low');
-imp1 = real(ifft(freqz(b1,a1)));
-H(:,1) = imp1(1:impulseL);
+[tmp1,tmp2] = butter(10, cutoff(1,2));
+H(:,1) = ifft(freqz(tmp1, tmp2, impulseL, 'whole', 1/Tn));
 
 % others channels bandpass
 for n = 2:N
-    [b1,a1] = butter(20, [cutoff(n,1) cutoff(n,2)], 'bandpass');
-    imp1 = real(ifft(freqz(b1,a1)));
-    H(:,n) = imp1(1:impulseL);
+    [tmp1,tmp2] = butter(10, [cutoff(n,1) cutoff(n,2)]);
+    H(:,n) = ifft(freqz(tmp1, tmp2, impulseL, 'whole', 1/Tn));
 end
 
 % pre-allocate to please Matlab then filter
@@ -25,33 +23,29 @@ len2 = size(data,1)+impulseL-1;
 % convolute the signal with the impulses responses
 s2High = conv2(data, 1, H);
 
-% recreate localy the modulated start frame
-% start_t = upfirdn(codesymbol(startSeq), rcos, beta)';
-% start_t = start_t(1:end-span/2*beta,:);
-% b1 = size(start_t, 1);
-% a1 = cos(carfreq*linspace(0, 2*pi*b1*Tn, b1))';
-% start_t = start_t .* a1;
-% lagDiff = finddelay(start_t, s2High);
-
+% find filters delay
+[~,i] = max(H);
 % generate localy the dephased carrier
-carrier = cos(carfreq*linspace(0, 2*pi*len2*Tn, len2))';
-
+t = zeros(N, len2);
+for n = 1:N
+    t(n,:) = linspace(i(n)*Tn, 2*pi*len2*Tn+i(n)*Tn, len2);
+end
+carrier = cos(carfreq.*t)';
 % demodulate
 s2 = s2High ./ carrier;
 
 % filter the canal noise with the adequate filter
 temp = s2;
-lenr = size(rcos,2);
-len3 = size(temp,1)+lenr-1;
+len3 = size(temp,1)+span*beta;
 s2 = zeros(len3,N);
 for n = 1:N
     s2(:,n) = conv(rcos, temp(:,n));
 end
 
 % compensate the start trame
-s2t = s2(span/2*beta+numel(startSeq)*beta+1:end, :);
+s2t = s2(span*beta+i-4:end, :);
 % generate the index vector
-s2i = 1:beta:beta*lena-(beta-1);
+s2i = 1:beta:beta*size(x,1)-(beta-1);
 % extract the values at index
 decoded = s2t(s2i,:);
 % quantize the extracted values

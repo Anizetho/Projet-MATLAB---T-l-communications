@@ -9,15 +9,13 @@ x = controlbit(x, 7);
 % append the start sequence
 x = [startSeq'*ones(1, N); x];
 a = codesymbol(x);
-lena = size(a, 1)-numel(startSeq);
 % shape to impulse
 rcos = rcosdesign(roll, span, beta);
 a = upsample(a, beta);
 s1 = conv2(rcos, 1, a);
 len1 = size(s1, 1);
-
-carfreq = (0:N-1)'*L*2/Tb; % carrier frequencies
-carrier = cos(carfreq*linspace(0, 2*pi*len1*Tn, len1))';
+% carrier frequencies
+carfreq = (0:N-1)'*L*2/Tb;
 
 %% plot impulsions
 % iX = linspace(0, span/1e2, 1e2*span+1);
@@ -32,6 +30,7 @@ carrier = cos(carfreq*linspace(0, 2*pi*len1*Tn, len1))';
 % clear('iX', 'iY')
 
 %% modulate by carriers
+carrier = cos(carfreq*linspace(0, 2*pi*len1*Tn, len1))';
 s1High = s1 .* carrier;
 
 % normalise power to 'pwr' dBm
