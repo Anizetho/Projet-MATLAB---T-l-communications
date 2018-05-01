@@ -6,7 +6,6 @@
 codesymbol = @(x)x.*2-1;
 
 % System
-K = 4;          % module number (unused)
 N = 3;          % available channels
 M = 45;         % message size (bits)
 

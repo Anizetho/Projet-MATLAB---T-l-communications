@@ -33,19 +33,22 @@ end
 carrier = cos(carfreq.*t)';
 % demodulate
 s2 = s2High ./ carrier;
-
 % filter the canal noise with the adequate filter
-temp = s2;
-len3 = size(temp,1)+span*beta;
-s2 = zeros(len3,N);
-for n = 1:N
-    s2(:,n) = conv(rcos, temp(:,n));
-end
+s2 = conv2(rcos, 1, s2);
+
+% bad things happen
+polarity = kron(ones(1,N),[1 -1]);
+s2 = s2 .* polarity(1:N);
 
 % compensate the start trame
 s2t = s2(span*beta+i-4:end, :);
 % generate the index vector
-s2i = 1:beta:beta*size(x,1)-(beta-1);
+s2i = 1:beta:beta*size(x,1);
+% hit markers
+figure, hold on
+stem(s2t(:,2))
+stem(s2i,s2t(s2i,2),'r*', 'MarkerSize', 8.0)
+grid, hold off
 % extract the values at index
 decoded = s2t(s2i,:);
 % quantize the extracted values

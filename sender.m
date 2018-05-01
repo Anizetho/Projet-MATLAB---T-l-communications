@@ -27,7 +27,7 @@ carfreq = (0:N-1)'*L*2/Tb;
 % ylabel("Coefficient d'amplitude"), xlabel("Temps (s)")
 % legend(strcat("Canal ", num2str((1:N)')))
 % grid
-% clear('iX', 'iY')
+% clear iX iY
 
 %% modulate by carriers
 carrier = cos(carfreq*linspace(0, 2*pi*len1*Tn, len1))';
