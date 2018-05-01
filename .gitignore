@@ -1,12 +1,13 @@
-# macOS temporary file
+# macOS
 .DS_Store
-# LaTeX temporary files
+# Matlab
+*.m~
+# LaTeX
 *.aux
 *.auxlock
 *.out
 *.toc
 *.log
 *.synctex.gz
-# Externalize temporary files
 *.md5
 *.dpth
