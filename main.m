@@ -12,11 +12,11 @@ channel
 % filter data and read it
 receiver
 
-% compare the generate signal in sender to the extracted signal in receiver
+% compare the sent signal with the received one
 figure
 subplot(2,1,1)
 stem(s1(:,2));
-title('Signal normalisé envoyé dans l''émeteur')
+title('Signal normalisé envoyé par l''émeteur')
 xlabel('Temps de transmission (s)')
 ylabel('Amplitude du signal')
 grid

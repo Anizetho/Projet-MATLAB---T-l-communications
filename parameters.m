@@ -21,7 +21,7 @@ pwr = 20;       % channel power in dBm
 
 % Channel
 Z0 = 50;        % characteristic impedance
-shift = 0;      % samples delay
+shift = 0;      % samples delay (unused)
 
 % Receiver
 impulseL = 128;

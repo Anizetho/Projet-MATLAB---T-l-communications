@@ -5,7 +5,7 @@
 
 x = randi([0 1], M, N);
 % append the control bits
-x = controlbit(x, 7);
+%x = controlbit(x, 7);
 % append the start sequence
 x = [startSeq'*ones(1, N); x];
 a = codesymbol(x);
@@ -18,22 +18,21 @@ len1 = size(s1, 1);
 carfreq = (0:N-1)'*L*2/Tb;
 
 %% plot impulsions
-% iX = linspace(0, span/1e2, 1e2*span+1);
-% iY = rcosdesign(roll, span, 1e2);
-% plot(iX, iY' * ones(1, N) .* ...
-%      cos(carfreq*linspace(0, 2*pi, span*1e2+1))')
-% ylim([-max(iY)*1.1 +max(iY)*1.1])
-% title("Représentation temporelle des impulsions utilisées")
-% ylabel("Coefficient d'amplitude"), xlabel("Temps (s)")
-% legend(strcat("Canal ", num2str((1:N)')))
-% grid
-% clear iX iY
+iX = linspace(0, span/1e2, 1e2*span+1);
+iY = rcosdesign(roll, span, 1e2);
+plot(iX, iY' * ones(1, N) .* ...
+     cos(carfreq*linspace(0, 2*pi, span*1e2+1))')
+ylim([-max(iY)*1.1 +max(iY)*1.1])
+title("Représentation temporelle des impulsions utilisées")
+ylabel("Coefficient d'amplitude"), xlabel("Temps (s)")
+legend(strcat("Canal ", num2str((1:N)')))
+grid
+clear iX iY
 
 %% modulate by carriers
-s1High = s1(:,1);
-for n = 2:N
-    s1High(:,n) = modulate(s1(:,n), carfreq(n), 1/Tn);
-end
+t = (0:Tn:(len1-1)*Tn)';
+t = t(:,ones(1,N));
+s1High = s1.*cos(2*pi*carfreq'.*t);
 
 % normalise power to 'pwr' dBm
 avgPower = bandpower(s1High)/Z0*(1000/pwr);

@@ -24,17 +24,24 @@ len2 = size(data,1)+impulseL-1;
 s2High = conv2(data, 1, H);
 
 % demodulate
+t = (0:Tn:(len2-1)*Tn)';
+t = t(:,ones(1,N));
+s2 = s2High.*cos(2*pi*carfreq'.*t);
 s2(:,1) = s2High(:,1);
-for n = 2:N
-    s2(:,n) = demod(s2High(:,n), carfreq(n), 1/Tn);
+for i = 2:N
+    [bf,af] = butter(5, carfreq(n)*2*Tn);
+    s2(:,i) = filtfilt(bf, af, s2(:,i));
 end
+
 % filter the canal noise with the adequate filter
 s2 = conv2(rcos, 1, s2);
-
+% invert channel (no idea why)
+polarity = kron(ones(1,ceil(N/2)), [1 -1]);
+s2 = s2 .* polarity(1:N);
 % find filters delay
 [~,i] = max(H);
 % compensate the start trame
-s2t = s2(span*beta+i-2:end, :);
+s2t = s2(span*beta+i-2+shift:end, :);
 % generate the index vector
 s2i = 1:beta:beta*size(x,1);
 % extract the values at index
@@ -45,7 +52,7 @@ decoded = decoded>0;
 % hit markers *PEW* *PEW*
 figure, hold on
 stem(s2t(:,2))
-stem(s2i,s2t(s2i,2),'r*', 'MarkerSize', 8.0)
+stem(s2i, s2t(s2i,2), 'r*', 'MarkerSize', 8.0)
 grid, hold off
 
 %% plot visual representation of the transmission

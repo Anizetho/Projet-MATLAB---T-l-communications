@@ -13,10 +13,10 @@ noise_2 = conv(noise_f, noise_1);
 alpha = (0.90-0.60)*rand([1 1])+0.60;
 
 % increase noise with variance
-variance = 1;
+variance = 0;
 std_dev = sqrt(variance);
 noise_3 = noise_2*std_dev;
 
-temp = numel(noise_2)-numel(data);
-data = [zeros(temp,1); data];
+shift = numel(noise_2)-numel(data);
+data = [zeros(shift,1); data];
 data = alpha*data+noise_3;
