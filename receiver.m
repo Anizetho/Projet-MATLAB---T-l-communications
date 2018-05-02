@@ -20,19 +20,18 @@ end
 
 % pre-allocate to please Matlab then filter
 len2 = size(data,1)+impulseL-1;
-% convolute the signal with the impulses responses
+% separate channels
 s2High = conv2(data, 1, H);
 
 % demodulate
-t = (0:Tn:(len2-1)*Tn)';
-t = t(:,ones(1,N));
+t = (0:Tn:(len2-1)*Tn)'*ones(1,N);
 s2 = s2High.*cos(2*pi*carfreq'.*t);
 s2(:,1) = s2High(:,1);
-for i = 2:N
+for n = 2:N
     [bf,af] = butter(5, carfreq(n)*2*Tn);
     impulse = ifft(freqz(bf, af, impulseL, 'whole', 1/Tn));
-    s2(:,i) = conv(s2(:,i), impulse(1:+1:end), 'same'); % forward
-    s2(:,i) = conv(s2(:,i), impulse(end:-1:1), 'same'); % backward
+    s2(:,n) = conv(s2(:,n), impulse(1:+1:end), 'same'); % forward
+    s2(:,n) = conv(s2(:,n), impulse(end:-1:1), 'same'); % backward
 end
 
 % filter the canal noise with the adequate filter
@@ -43,7 +42,7 @@ s2 = s2 .* polarity(1:N);
 % find filters delay
 [~,i] = max(H);
 % compensate the start trame
-s2t = s2(span*beta+i-2+shift:end, :);
+s2t = s2(span*beta+i+shift-3:end, :);
 % generate the index vector
 s2i = 1:beta:beta*size(x,1);
 % extract the values at index

@@ -30,8 +30,7 @@ grid
 clear iX iY
 
 %% modulate by carriers
-t = (0:Tn:(len1-1)*Tn)';
-t = t(:,ones(1,N));
+t = (0:Tn:(len1-1)*Tn)'*ones(1,N);
 s1High = s1.*cos(2*pi*carfreq'.*t);
 
 % normalise power to 'pwr' dBm
