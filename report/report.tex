@@ -95,35 +95,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 
-\begin{figure}[htbp]
-	\centering
-	\resizebox{\textwidth}{5cm}{%
-		\tikzsetnextfilename{mod_nofilter}
-		\input{figures/mod_nofilter.tex}
-	}
-	\caption{Signal non-modulé dans l'émetteur.}
-\end{figure}
-\begin{figure}[htbp]
-	\centering
-	\resizebox{\textwidth}{5cm}{%
-		\tikzsetnextfilename{mod_nodelay}
-		\input{figures/mod_nodelay.tex}
-	}
-	\caption{Signal démodulé dans le receveur sans avoir pris en compte
-			le déphasage de la porteuse.}
-\end{figure}
-\begin{figure}[htbp]
-	\centering
-	\resizebox{\textwidth}{5cm}{%
-		\tikzsetnextfilename{mod_filter}
-		\input{figures/mod_filter.tex}
-	}
-	\caption{Signal démodulé dans le receveur en essayant de compenser le
-			déphasage de la porteuse en la filtrant également.
-			À noter que le signal s'allonge et que des parasites s'ajoutent
-			à l'extrémité finale.}
-\end{figure}
-
 \section{L'émetteur}
 
 \section{Conclusion}
