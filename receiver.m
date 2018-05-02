@@ -30,7 +30,9 @@ s2 = s2High.*cos(2*pi*carfreq'.*t);
 s2(:,1) = s2High(:,1);
 for i = 2:N
     [bf,af] = butter(5, carfreq(n)*2*Tn);
-    s2(:,i) = filtfilt(bf, af, s2(:,i));
+    impulse = ifft(freqz(bf, af, impulseL, 'whole', 1/Tn));
+    s2(:,i) = conv(s2(:,i), impulse(1:+1:end), 'same'); % forward
+    s2(:,i) = conv(s2(:,i), impulse(end:-1:1), 'same'); % backward
 end
 
 % filter the canal noise with the adequate filter
