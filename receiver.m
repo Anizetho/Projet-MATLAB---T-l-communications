@@ -18,12 +18,11 @@ for n = 2:N
     H(:,n) = ifft(freqz(tmp1, tmp2, impulseL, 'whole', 1/Tn));
 end
 
-% pre-allocate to please Matlab then filter
-len2 = size(data,1)+impulseL-1;
 % separate channels
 s2High = conv2(data, 1, H);
 
 % demodulate
+len2 = size(s2High,1);
 t = (0:Tn:(len2-1)*Tn)'*ones(1,N);
 s2 = s2High.*cos(2*pi*carfreq'.*t);
 s2(:,1) = s2High(:,1);
