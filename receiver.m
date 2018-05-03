@@ -9,13 +9,13 @@ cutoff = [carfreq-1/Tb carfreq+1/Tb]*2*Tn;
 H = zeros(impulseL, N);
 
 % first channel lowpass
-[tmp1,tmp2] = butter(10, cutoff(1,2));
-H(:,1) = ifft(freqz(tmp1, tmp2, impulseL, 'whole', 1/Tn));
+[bf,af] = butter(10, cutoff(1,2));
+H(:,1) = ifft(freqz(bf, af, impulseL, 'whole', 1/Tn));
 
 % others channels bandpass
 for n = 2:N
-    [tmp1,tmp2] = butter(10, [cutoff(n,1) cutoff(n,2)]);
-    H(:,n) = ifft(freqz(tmp1, tmp2, impulseL, 'whole', 1/Tn));
+    [bf,af] = butter(10, [cutoff(n,1) cutoff(n,2)]);
+    H(:,n) = ifft(freqz(bf, af, impulseL, 'whole', 1/Tn));
 end
 
 % separate channels
@@ -35,9 +35,6 @@ end
 
 % filter the canal noise with the adequate filter
 s2 = conv2(rcos, 1, s2);
-% invert channel (no idea why)
-polarity = kron(ones(1,ceil(N/2)), [1 -1]);
-s2 = s2 .* polarity(1:N);
 % find filters delay
 [~,i] = max(H);
 % compensate the start trame

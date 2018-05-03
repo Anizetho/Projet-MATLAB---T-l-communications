@@ -17,11 +17,11 @@ L = 1.25;       % bandwidth xTb
 beta = 4*N*L;   % upsampling factor
 Tn = Tb/beta;   % upsample sampling rate
 span = 20;      % rcos span for thinner bandwidth consumption
-pwr = 20;       % channel power in dBm
+pwr = 4;        % channel power in mW
 
 % Channel
 Z0 = 50;        % characteristic impedance
-shift = 0;      % samples delay (unused)
+shift = 4;      % samples delay
 
 % Receiver
 impulseL = 128;
