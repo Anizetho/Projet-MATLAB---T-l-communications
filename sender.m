@@ -33,8 +33,9 @@ clear iX iY
 t = (0:Tn:(len1-1)*Tn)'*ones(1,N);
 s1High = s1.*cos(2*pi*carfreq'.*t);
 
-% normalise power to 'pwr' dBm
-avgPower = bandpower(s1High)/Z0*(1000/pwr);
+% normalise power to 'pwr' mW
+pwrTimesSec = pwr*len1*Tn; % mW per second * transmission time
+avgPower = bandpower(s1High)/Z0*1000/(pwrTimesSec);
 s1High = s1High./sqrt(avgPower);
 
 % sum all channels before transmission
