@@ -8,6 +8,7 @@
     \definecolor{red}  {HTML}{950009}
     \definecolor{green}{HTML}{0E610A}
     \definecolor{blue} {HTML}{020069}
+    \definecolor{bglst}{HTML}{F4F4F4}
 \usepackage{fontspec}
     \setsansfont{Arial}
 \usepackage{amsmath}
@@ -28,6 +29,10 @@
 	\pgfplotsset{plot coordinates/math parser=false}
 	\newlength\figureheight
 	\newlength\figurewidth
+\usepackage{minted}
+	\setminted{linenos}
+	\setminted{fontsize=\scriptsize}
+	\setminted{bgcolor=bglst}
 
 % Keep lasts
 \usepackage[french]{babel}
@@ -44,7 +49,7 @@
 \renewcommand{\UrlFont}{\small}
 \renewcommand{\arraystretch}{1.1}
 \newcommand{\important}[1]{\textbf{\textsf{\color{gray}{#1}}}}
-\setlength{\parskip}{2mm}
+\setlength{\parskip}{8pt}
 
 \begin{document}
 
@@ -58,7 +63,7 @@
     {\rm\sffamily\LARGE Techniques de transmission et traitement du signal\par}
     \vspace{3mm}
     {\sffamily\bfseries\LARGE Simulation d’une chaîne de transmission\\
-    						  numérique avec Matlab\par}
+    						  numérique avec Matlab\textregistered{}\par}
     \vspace{5mm}
     \rule{\linewidth}{1.5pt}%
     \vspace{1cm}
@@ -94,9 +99,43 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
+L'objectif de ce projet est simuler la couche physique d'un protocol de communication, c'est-à-dire le niveau 1 du modèle OSI.
+La simulation est réalisée avec le logiciel Matlab\textregistered{} édité par Mathworks\textregistered{}.
+Les contraintes imposées dans la simulation sont de tenir compte de plusieurs émetteurs et receveurs pouvant communiquer en même temps.
+Pour répondre à cette contrainte, la couche physique implémentée utilise le multiplexage fréquentiel.
+
+Ce document reprend la conception du projet et les choix qui ont dû y être décidés, accompagnés de leur explication.
 
 \section{L'émetteur}
 
+\section{Le canal}
+
+\section{Le receveur}
+
+\section{Les performances}
+
 \section{Conclusion}
+
+\newpage
+\appendix
+\section{main.m}
+\inputminted{matlab}{../main.m}
+
+\pagebreak
+\section{parameters.m}
+\inputminted{matlab}{../parameters.m}
+
+\pagebreak
+\section{sender.m}
+\inputminted{matlab}{../sender.m}
+
+\pagebreak
+\section{channel.m}
+\inputminted{matlab}{../channel.m}
+
+\pagebreak
+\section{receiver.m}
+\inputminted{matlab}{../receiver.m}
+
 
 \end{document}
