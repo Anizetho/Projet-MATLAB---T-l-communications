@@ -16,7 +16,7 @@ receiver
 figure
 subplot(2,1,1)
 stem(linspace(0, len1*Tn, len1), s1(:,2));
-title('Signal normalisé envoyé par l''émeteur')
+title('Signal normalisÃ© envoyÃ© par l''Ã©meteur')
 xlabel('Temps de transmission (s)')
 ylabel('Amplitude du signal')
 grid
@@ -24,7 +24,7 @@ grid
 subplot(2,1,2)
 len3 = size(s2,1);
 stem(linspace(0, len3*Tn, len3), s2(:,2), 'Color', [0.85 0.33 0.1]);
-title('Signal recomposé dans le receveur')
+title('Signal recomposÃ© dans le receveur')
 xlabel('Temps de transmission (s)')
 ylabel('Amplitude du signal')
 grid

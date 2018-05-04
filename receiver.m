@@ -56,7 +56,7 @@ grid, hold off
 figure
 subplot(2,1,1)
 stem(linspace(0, len2*Tn, len2), s2High)
-title('Représentation temporelle du signal reçu')
+title('ReprÃ©sentation temporelle du signal reÃ§u')
 ylabel('Amplitude (v)'), xlabel('Times (s)')
 legend(strcat("Canal ", num2str((1:N)')), 'Location', 'SouthWest')
 grid
@@ -64,7 +64,7 @@ grid
 subplot(2,1,2)
 plot(linspace(0, 1/Tn-1, len2), pow2db(abs(fft(s2High/len2)).^2/Z0)+30)
 ylim([-60 10])
-title('Représentation fréquentielle du signal reçu')
+title('ReprÃ©sentation frÃ©quentielle du signal reÃ§u')
 ylabel('Puissance (dBm)'), xlabel('Frequency (Hz)')
 legend(strcat("Canal ", num2str((1:N)')), 'Location', 'North')
 grid

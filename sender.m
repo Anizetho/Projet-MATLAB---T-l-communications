@@ -23,7 +23,7 @@ iY = rcosdesign(roll, span, 1e2);
 plot(iX, iY' * ones(1, N) .* ...
      cos(carfreq*linspace(0, 2*pi, span*1e2+1))')
 ylim([-max(iY)*1.1 +max(iY)*1.1])
-title("Représentation temporelle des impulsions utilisées")
+title("ReprÃ©sentation temporelle des impulsions utilisÃ©es")
 ylabel("Coefficient d'amplitude"), xlabel("Temps (s)")
 legend(strcat("Canal ", num2str((1:N)')))
 grid
@@ -45,7 +45,7 @@ data = sum(s1High, 2);
 figure
 subplot(2,1,1)
 stem(linspace(0, len1*Tn, len1), s1High)
-title('Représentation temporelle du signal envoyé')
+title('ReprÃ©sentation temporelle du signal envoyÃ©')
 ylabel('Amplitude (v)'), xlabel('Times (s)')
 legend(strcat("Canal ", num2str((1:N)')), 'Location', 'SouthWest')
 grid
@@ -53,7 +53,7 @@ grid
 subplot(2,1,2)
 plot(linspace(0, 1/Tn-1, len1), pow2db(abs(fft(s1High/len1)).^2/Z0)+30)
 ylim([-60 10])
-title('Représentation fréquentielle du signal envoyé')
+title('ReprÃ©sentation frÃ©quentielle du signal envoyÃ©')
 ylabel('Puissance (dBm)'), xlabel('Frequency (Hz)')
 legend(strcat("Canal ", num2str((1:N)')), 'Location', 'North')
 grid
