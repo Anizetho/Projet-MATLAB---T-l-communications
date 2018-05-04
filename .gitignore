@@ -11,3 +11,4 @@
 *.synctex.gz
 *.md5
 *.dpth
+*/_minted-report/*
