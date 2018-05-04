@@ -31,7 +31,7 @@
 	\newlength\figurewidth
 \usepackage{minted}
 	\setminted{linenos}
-	\setminted{fontsize=\scriptsize}
+	\setminted{fontsize=\footnotesize}
 	\setminted{bgcolor=bglst}
 
 % Keep lasts
@@ -106,35 +106,34 @@ Pour répondre à cette contrainte, la couche physique implémentée utilise le 
 
 Ce document reprend la conception du projet et les choix qui ont dû y être décidés, accompagnés de leur explication.
 
-\section{L'émetteur}
+\section{Implémentation}
 
-\section{Le canal}
+\subsection{\'Emetteur}
 
-\section{Le receveur}
+\subsection{Canal}
 
-\section{Les performances}
+\subsection{Receveur}
+
+\section{Performances}
 
 \section{Conclusion}
 
 \newpage
 \appendix
-\section{main.m}
+\section{Fichiers sources}
+\subsection{main.m}
 \inputminted{matlab}{../main.m}
 
-\pagebreak
-\section{parameters.m}
+\subsection{parameters.m}
 \inputminted{matlab}{../parameters.m}
 
-\pagebreak
-\section{sender.m}
+\subsection{sender.m}
 \inputminted{matlab}{../sender.m}
 
-\pagebreak
-\section{channel.m}
+\subsection{channel.m}
 \inputminted{matlab}{../channel.m}
 
-\pagebreak
-\section{receiver.m}
+\subsection{receiver.m}
 \inputminted{matlab}{../receiver.m}
 
 
