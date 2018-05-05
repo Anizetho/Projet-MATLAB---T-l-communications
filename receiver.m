@@ -5,6 +5,7 @@
 
 % calculate the bandwidth limits for each channel
 cutoff = [carfreq-1/Tb carfreq+1/Tb]*2*Tn;
+if N == 1, cutoff = [0 0.9999]; end
 % pre-allocate filters matrix
 H = zeros(impulseL, N);
 
@@ -56,7 +57,7 @@ grid, hold off
 figure
 subplot(2,1,1)
 stem(linspace(0, len2*Tn, len2), s2High)
-title('Représentation temporelle du signal reçu')
+title('Representation temporelle du signal recu')
 ylabel('Amplitude (v)'), xlabel('Times (s)')
 legend(strcat("Canal ", num2str((1:N)')), 'Location', 'SouthWest')
 grid
@@ -64,7 +65,7 @@ grid
 subplot(2,1,2)
 plot(linspace(0, 1/Tn-1, len2), pow2db(abs(fft(s2High/len2)).^2/Z0)+30)
 ylim([-60 10])
-title('Représentation fréquentielle du signal reçu')
+title('Representation frequentielle du signal recu')
 ylabel('Puissance (dBm)'), xlabel('Frequency (Hz)')
 legend(strcat("Canal ", num2str((1:N)')), 'Location', 'North')
 grid

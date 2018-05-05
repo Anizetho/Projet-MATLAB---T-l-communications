@@ -20,10 +20,10 @@ for n = 2:N
 end
 
 xlim([0 75]);
-xlabel('Fréquence (Hz)')
+xlabel('Frequence (Hz)')
 ylabel('Amplitude (dB)')
 grid, hold off
 
 figure, plot(gd), grid
-xlabel('Fréquence (Hz)')
+xlabel('Frequence (Hz)')
 ylabel('Samples (sample x rad)')

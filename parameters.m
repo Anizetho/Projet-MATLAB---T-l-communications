@@ -6,22 +6,22 @@
 codesymbol = @(x)x.*2-1;
 
 % System
-N = 2;          % available channels
-M = 1e3;        % message size (bits)
+N = 2;        % available channels
+M = 50;       % message size (bits)
 
 % Sender
-R = 10;         % bit rate
-Tb = 1/R;       % bit duration
-roll = 0.40;    % rolloff factor
-L = 1.25;       % bandwidth xTb
-beta = 4*N*L;   % upsampling factor
-Tn = Tb/beta;   % upsample sampling rate
-span = 20;      % rcos span for thinner bandwidth consumption
-pwr = 1;        % channel power in mW
+R = 10;       % bit rate
+Tb = 1/R;     % bit duration
+roll = 0.40;  % rolloff factor
+L = 1.25;     % bandwidth xTb
+beta = 4*N;   % upsampling factor
+Tn = Tb/beta; % upsample sampling rate
+span = 20;    % rcos span for thinner bandwidth consumption
+pwr = 1;      % channel power in mW
 
 % Channel
-Z0 = 50;        % characteristic impedance
-shift = 4;      % samples delay
+Z0 = 50;      % characteristic impedance
+shift = 4;    % samples delay
 
 % Receiver
 impulseL = 128;
