@@ -137,7 +137,8 @@ Cela est normal étant donné que l'on retrouve plus de fréquence dans un pic i
 Ce pic souffrira donc plus fortement au filtrage fréquentiel.
 
 \begin{figure}[htbp]
-	\includegraphics[width=\textwidth]{eps/comparaison.eps}
+	\centering
+	\includegraphics[height=0.45\textheight]{eps/comparaison.eps}
 	\caption{Comparaison entre le signal en bande de base émis dans l'émetteur et celui
 			 recomposé dans le receveur.
 			 Le signal reçu est décalé d'approximativement 1 seconde par rapport au signal
@@ -200,12 +201,18 @@ Ceci n'étant pas possible en pratique, la réponse doit être tronquée tout en
 Par essaies empiriques, nous avons déterminé que 20 fois le taux de sur-échantillonnage est une bonne valeur.
 
 Les filtres générés et leur réponse impulsionnelle obtenues, nous les modulons par les porteuses avant d'être convoluées avec le signal.
+Nous prenons la liberté d'éloigner les porteuses un peu plus que nécessaire avec le paramètre \texttt{L} défini dans la simulation présentée comme \num{1.25}.
+Ce paramètre multiplie la bande de fréquence séparant 2 porteuses côté-à-côté.
+Nous avons fait ce choix car autrement, les fréquences de coupures de filtres servant à séparer les canaux se touchent à \SI{-3}{\decibel}, laissant possiblement beaucoup d'interférence entre canaux. 
+Si nous pouvons nous permettre cette séparation, c'est parce que nous avons calculé le taux de sur-échantillonnage avec un facteur de roll-off à 1, or dans la simulation nous l'avons configuré à \num{0.4}.
+Cela nous offre de la marge pour séparer les canaux, tant que $L \leq \frac{1+1}{1+\num{0.4}} = \num{1.4287}$.
 Nous obtenons les impulsions présentées à la figure~\ref{fig:impulse}.
 Cette figure présente les 3 impulsions nécessaires pour multiplexer en 3 canaux.
 Il est intéressant de constater que l'impulsion du canal 2 est inversée en amplitude.
 
 \begin{figure}[htbp]
-	\includegraphics[width=\textwidth]{eps/impulse.eps}
+	\centering
+	\includegraphics[height=0.4\textheight]{eps/impulse.eps}
 	\caption{Représentation temporelle des impulsions utilisées pour multiplexer en 3 canaux.
 			 Chaque des impulsions est sa réponse en bande de base modulée par sa porteuse.
 			 Il est intéressant de constater que l'impulsion du canal 2 est inversée en
@@ -224,7 +231,8 @@ Le script \texttt{sender.m} affiche un récapitulatif de la transmission en temp
 Un exemple de ce récapitulatif est présenté à la figure~\ref{fig:sender}.
 
 \begin{figure}[htbp]
-	\includegraphics[width=\textwidth]{eps/sender.eps}
+	\centering
+	\includegraphics[height=0.45\textheight]{eps/sender.eps}
 	\caption{Signaux de 50 bits chacun envoyés sur 2 canaux fréquentiels au rythme de 10 bit/s
 			 avec une fréquence d'échantillonage de \SI{80}{\hertz}.}
 	\label{fig:sender}
@@ -238,21 +246,66 @@ Tout cela accompagné de bruit parasite.
 Nous nous attendons à ce que le bruit sois de type AWGN, Additive white Gaussian noise, pouvant être symbolisé par une variable aléatoire de distribution normale et de moyenne nulle $g[k]\sim\mathcal{N}(0,\sigma^2)$.
 Tout commence par la génération d'un vecteur aléatoire de distribution normale de même taille que le vecteur de donnée.
 Ce vecteur aléatoire est ensuite filtré pour ne pas contenir de fréquence supérieure à celle de Nyquist.
+L'intensité du bruit se règle en multipliant le vecteur obtenu, qui est de variance 1, par l'écart-type de la variance désiré.
 Un facteur d'atténuation A borné tel que $\num{0.6} \leq A \leq \num{0.9}$ est également généré.
 Le script effectue ensuite $S_2[k] = A \cdot S_1[k] + g[k]$ pour appliquer l'atténuation et le bruit.
 Du \og{}zero-padding\fg{} est ajouté au début du signal pour simuler un décalage temporel.
 
 \subsection{Receveur}
+Le fichier \texttt{receiver.m} consultable à l'annexe~\ref{app:receiver} se charge de ramener les signaux transmis en bande de base et prend des décisions sur les valeurs mesurées à tous les $T_b$ instants en espérant retrouver le signal original.
+
+Le script commence par générer des filtres de type Butterworth qui vont lui permettre de séparer les canaux.
+Pour filtrer, on commence par obtenir la fraction polynomiale représentant le filtre analogique.
+De cette fonction, on calcule la réponse fréquentiel entre la fréquence 0 et la fréquence d'échantillonnage.
+On applique la transformé de Fourier inverse à cette réponse fréquentiel, et nous obtenons la réponse impulsionnelle du filtre.
+Il suffit dès lors de convoluer les échantillons temporels de notre signal avec les réponses impulsionnelles calculées et nous séparons ainsi les bandes spectrales.
+Nous calculons des filtres d'ordre 10, la figure~\ref{fig:filters} et ~\ref{fig:grpdelay} présentent les filtres permettant des séparer les deux canaux utilisé dans cette simulation.
+
+Une fois les canaux séparés, il faut les ramener en bande de base.
+On ne peut pas simplement diviser les signaux pas un cosinus de même fréquence que la porteuse car le déphasage entre les deux laisserait une composante sinusoïdale parasite dans nos échantillons démodulés.
+Pour obtenir notre signal en bande de base, nous multiplions encore le signal modulé avec un cosinus à même fréquence, multiplier deux cosinus amène à additionner leur fréquence.
+Nous filtrons ensuite ce signal doublement multiplié par un filtre passe-bas pour supprimer les porteuses envoyée dans de plus haute fréquence, et les fréquences restantes sont notre signal en bande de base.
+En procédant de cette manière, nous contournons le problème d'estimation de la phase de la porteuse.
 
 \begin{figure}[htbp]
-	\includegraphics[width=\textwidth]{eps/receiver.eps}
+	\centering
+	\includegraphics[height=0.4\textheight]{eps/filters.eps}
+	\caption{Réponse en amplitude des filtres de type Butterworth utilisés dans le receveur
+			 pour séparer les canaux.}
+	\label{fig:filters}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[height=0.45\textheight]{eps/grpdelay.eps}
+	\caption{Retard de groupe des filtres de type Butterworth utilisés dans le receveur
+			 pour séparer les canaux.
+			 Le filtre 1 est un lowpass avec une fréquence de coupure à \SI{10}{\hertz}.
+			 Le filtre 2 est un bandpass avec une fréquence de coupure basse à
+			 \SI{25}{\hertz} et fréquence de coupure haute à \SI{35}{\hertz}.}
+	\label{fig:grpdelay}
+\end{figure}
+
+Le script receveur affiche un récapitulatif de la transmission reçue, comme l'émetteur affiche une récapitulatif de la transmission envoyée.
+Ces récapitulatifs permettent de comparer les signaux émis avant d'être sommé dans l'environnement de transmission, \textit{e.g.} un câble, et les signaux reçus après les avoir séparés par filtrage.
+La figure~\ref{fig:receiver} du receveur doit être comparé avec la figure~\ref{fig:sender} de l'émetteur.
+On peut constater que : temporellement le receveur a un message décalé de quelques échantillons ; et fréquentiellement un signal atténué de quelques dBm.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[height=0.45\textheight]{eps/receiver.eps}
 	\caption{Signaux de 50 bits chacun envoyés sur 2 canaux fréquentiels au rythme de 10 bit/s
 			 avec une fréquence d'échantillonage de \SI{80}{\hertz}.}
 	\label{fig:receiver}
 \end{figure}
 
+Une fois le signal en bande de base recomposé, le recevoir doit repérer début du signal et capturer un échantillon tous les $T_b$ instant.
+Depuis cet échantillon capturé, il doit prendre la décision de choisir si le code transmis était $+1$ ou $-1$.
+La figure~\ref{fig:decimate} présente un exemple de capture d'échantillons effectuée par le receveur.
+
 \begin{figure}[htbp]
-	\includegraphics[width=\textwidth]{eps/decimate.eps}
+	\centering
+	\includegraphics[height=0.45\textheight]{eps/decimate.eps}
 	\caption{Visualisation de la capture d'échantillons pour le décideur.}
 	\label{fig:decimate}
 \end{figure}
@@ -266,7 +319,7 @@ Du \og{}zero-padding\fg{} est ajouté au début du signal pour simuler un décal
 \section{Conclusion}
 
 \appendix
-\newpage
+\clearpage
 
 \section{Fichiers sources}
 \label{sec:fichiers-sources}
