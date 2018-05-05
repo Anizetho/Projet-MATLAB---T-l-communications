@@ -231,6 +231,16 @@ Un exemple de ce récapitulatif est présenté à la figure~\ref{fig:sender}.
 \end{figure}
 
 \subsection{Canal}
+Le fichier \texttt{canal.m} consultable à l'annexe~\ref{app:channel} à pour mission de simuler les effets du canal de communication.
+Nous nous attendons à ce qu'il se comporte comme un filtre passe-bas, c.-à-d. une atténuation des amplitudes et un décalage temporelle.
+Tout cela accompagné de bruit parasite.
+
+Nous nous attendons à ce que le bruit sois de type AWGN, Additive white Gaussian noise, pouvant être symbolisé par une variable aléatoire de distribution normale et de moyenne nulle $g[k]\sim\mathcal{N}(0,\sigma^2)$.
+Tout commence par la génération d'un vecteur aléatoire de distribution normale de même taille que le vecteur de donnée.
+Ce vecteur aléatoire est ensuite filtré pour ne pas contenir de fréquence supérieure à celle de Nyquist.
+Un facteur d'atténuation A borné tel que $\num{0.6} \leq A \leq \num{0.9}$ est également généré.
+Le script effectue ensuite $S_2[k] = A \cdot S_1[k] + g[k]$ pour appliquer l'atténuation et le bruit.
+Du \og{}zero-padding\fg{} est ajouté au début du signal pour simuler un décalage temporel.
 
 \subsection{Receveur}
 
@@ -243,7 +253,7 @@ Un exemple de ce récapitulatif est présenté à la figure~\ref{fig:sender}.
 
 \begin{figure}[htbp]
 	\includegraphics[width=\textwidth]{eps/decimate.eps}
-	\caption{}
+	\caption{Visualisation de la capture d'échantillons pour le décideur.}
 	\label{fig:decimate}
 \end{figure}
 
