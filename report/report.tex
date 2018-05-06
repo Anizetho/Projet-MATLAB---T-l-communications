@@ -24,11 +24,6 @@
 \usepackage{caption}
     \captionsetup{labelfont={bf,sf,color=gray}}
 \usepackage{pdfpages}
-\usepackage{pgfplots}
-	\pgfplotsset{compat=newest}
-	\pgfplotsset{plot coordinates/math parser=false}
-	\newlength\figureheight
-	\newlength\figurewidth
 \usepackage{minted}
 	\setminted{linenos}
 	\setminted{fontsize=\footnotesize}
@@ -43,10 +38,6 @@
 \usepackage[luatex, backref]{hyperref}
     \hypersetup{colorlinks, breaklinks, urlcolor=red,
                 bookmarksopen, bookmarksnumbered}
-
-% Generating plots is really time consuming
-\usepgfplotslibrary{external}
-	\tikzexternalize[prefix=figures/]
 
 \renewcommand{\UrlFont}{\small}
 \renewcommand{\arraystretch}{1.1}
