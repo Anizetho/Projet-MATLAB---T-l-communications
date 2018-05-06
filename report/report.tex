@@ -127,7 +127,7 @@ On peut y apercevoir que le signal recomposé est délayé par rapport au signal
 Cela est normal étant donné que l'on retrouve plus de fréquence dans un pic isolé que dans une succession à la même amplitude.
 Ce pic souffrira donc plus fortement au filtrage fréquentiel.
 
-\begin{figure}[htbp]
+\begin{figure}[p]
 	\centering
 	\includegraphics[height=0.45\textheight]{eps/comparaison.eps}
 	\caption{Comparaison entre le signal en bande de base émis dans l'émetteur et celui
@@ -201,7 +201,7 @@ Nous obtenons les impulsions présentées à la figure~\ref{fig:impulse}.
 Cette figure présente les 3 impulsions nécessaires pour multiplexer en 3 canaux.
 Il est intéressant de constater que l'impulsion du canal 2 est inversée en amplitude.
 
-\begin{figure}[htbp]
+\begin{figure}[p]
 	\centering
 	\includegraphics[height=0.4\textheight]{eps/impulse.eps}
 	\caption{Représentation temporelle des impulsions utilisées pour multiplexer en 3 canaux.
@@ -221,7 +221,7 @@ La puissance de chaque canal est évaluée en intégrant la norme au carré sur 
 Le script \texttt{sender.m} affiche un récapitulatif de la transmission en temporel et fréquentiel avant de sommer tous les canaux pour les envoyer sur le seul lien physique disponible, le cable ou le rayonnement électro-magnétique.
 Un exemple de ce récapitulatif est présenté à la figure~\ref{fig:sender}.
 
-\begin{figure}[htbp]
+\begin{figure}[p]
 	\centering
 	\includegraphics[height=0.45\textheight]{eps/sender.eps}
 	\caption{Signaux de 50 bits chacun envoyés sur 2 canaux fréquentiels au rythme de 10 bit/s
@@ -258,7 +258,7 @@ Pour obtenir notre signal en bande de base, nous multiplions encore le signal mo
 Nous filtrons ensuite ce signal doublement multiplié par un filtre passe-bas pour supprimer les porteuses envoyée dans de plus haute fréquence, et les fréquences restantes sont notre signal en bande de base.
 En procédant de cette manière, nous contournons le problème d'estimation de la phase de la porteuse.
 
-\begin{figure}[htbp]
+\begin{figure}[p]
 	\centering
 	\includegraphics[height=0.4\textheight]{eps/filters.eps}
 	\caption{Réponse en amplitude des filtres de type Butterworth utilisés dans le receveur
@@ -266,7 +266,7 @@ En procédant de cette manière, nous contournons le problème d'estimation de l
 	\label{fig:filters}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[p]
 	\centering
 	\includegraphics[height=0.45\textheight]{eps/grpdelay.eps}
 	\caption{Retard de groupe des filtres de type Butterworth utilisés dans le receveur
@@ -282,7 +282,7 @@ Ces récapitulatifs permettent de comparer les signaux émis avant d'être somm�
 La figure~\ref{fig:receiver} du receveur doit être comparé avec la figure~\ref{fig:sender} de l'émetteur.
 On peut constater que : temporellement le receveur a un message décalé de quelques échantillons ; et fréquentiellement un signal atténué de quelques dBm.
 
-\begin{figure}[htbp]
+\begin{figure}[p]
 	\centering
 	\includegraphics[height=0.45\textheight]{eps/receiver.eps}
 	\caption{Signaux de 50 bits chacun envoyés sur 2 canaux fréquentiels au rythme de 10 bit/s
@@ -294,7 +294,7 @@ Une fois le signal en bande de base recomposé, le recevoir doit repérer début
 Depuis cet échantillon capturé, il doit prendre la décision de choisir si le code transmis était $+1$ ou $-1$.
 La figure~\ref{fig:decimate} présente un exemple de capture d'échantillons effectuée par le receveur.
 
-\begin{figure}[htbp]
+\begin{figure}[p]
 	\centering
 	\includegraphics[height=0.45\textheight]{eps/decimate.eps}
 	\caption{Visualisation de la capture d'échantillons pour le décideur.}
