@@ -92,8 +92,8 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
-L'objectif de ce projet est simuler la couche physique d'un protocol de communication, c'est-à-dire le niveau 1 du modèle OSI.
-La simulation est réalisée avec le logiciel Matlab\textregistered{} édité par Mathworks\textregistered{}.
+L'objectif de ce projet est de simuler la couche physique d'un protocol de communication, c'est-à-dire le niveau 1 du modèle OSI.
+La simulation est réalisée à l'aide du logiciel Matlab\textregistered{} édité par Mathworks\textregistered{}.
 Les contraintes imposées dans la simulation sont de tenir compte de plusieurs émetteurs et receveurs pouvant communiquer en même temps.
 Pour répondre à cette contrainte, la couche physique implémentée utilise le multiplexage fréquentiel.
 
@@ -103,7 +103,7 @@ Ce document reprend la conception du projet et les choix qui ont dû y être dé
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Implémentation}
 \label{sec:implementation}
-La section~\ref{sec:implementation} décrit le travail apporté dans les fichiers qui composent le projet.
+La section~\ref{sec:implementation} décrit le modus operandi réalisé dans les fichiers qui composent le projet.
 Ces fichiers peuvent être consultés à l'annexe~\ref{sec:fichiers-sources}.
 Ils consistent en :
 \begin{description}[align=right,labelwidth=2cm,labelindent=1cm]
@@ -118,12 +118,12 @@ Ils consistent en :
 \subsection{Fichier principale}
 Le fichier principale, aussi nommé \og{}main\fg{} par son nom anglais, se charge de lancer la simulation dans un ordre logique.
 Le fichier est consultable à l'annexe~\ref{app:main}.
-Son contenu est minime, il commence par nettoyer le plan de travail de variables et figures résiduelles.
+Son contenu est minime, il commence par nettoyer le plan de travail des variables et figures résiduelles.
 Il lance ensuite les scripts dans l'ordre parameters $\rightarrow$ sender $\rightarrow$ channel $\rightarrow$ receiver.
 
-Une fois la simulation terminée, il affiche une figure comparant le signal dans un canal émis par sender, au signal recomposé dans ce même canal par le receveur.
+Une fois la simulation terminée, il affiche une figure comparant le signal dans un canal émis par l'émetteur, au signal recomposé dans ce même canal par le receveur.
 La figure~\ref{fig:comparaison} présente un exemple de cette comparaison.
-On peut y apercevoir que le signal recomposé est délayé par rapport au signal émis, et que son amplitude aux pics isolés est quasiment divisé par deux.
+On peut y apercevoir que le signal recomposé est délayé par rapport au signal émis, et que ses amplitudes aux pics isolés est quasiment divisées par deux.
 Cela est normal étant donné que l'on retrouve plus de fréquence dans un pic isolé que dans une succession à la même amplitude.
 Ce pic souffrira donc plus fortement au filtrage fréquentiel.
 
@@ -140,31 +140,31 @@ Ce pic souffrira donc plus fortement au filtrage fréquentiel.
 \end{figure}
 
 \subsection{Paramètres}
-Le fichier \texttt{parameters.m} offre un accès rapide et concentré aux différents paramètres influençant le simulation tel que le nombre de canaux fréquentiel disponibles, la taille du message à envoyer, ou encore la vitesse d'envoie.
+Le fichier \texttt{parameters.m} offre un accès rapide et concentré aux différents paramètres influençant la simulation tel que la quantité de canaux fréquentiel disponibles, la taille du message à envoyer, ou encore la vitesse d'envoie.
 Ce fichier est consultable à l'annexe~\ref{app:paremeters}.
 Chaque paramètre est accompagné d'un commentaire expliquant dument son utilité.
 
 \subsection{Émetteur}
-Le fichier \texttt{emetteur.m} consultable à l'annexe~\ref{app:sender} commence la simulation à proprement dire.
-Il débute par générer des bits aléatoire suivant une distribution normale.
+Le fichier \texttt{emetteur.m}, consultable à l'annexe~\ref{app:sender}, commence la simulation proprement dite.
+Il débute par générer une séquence de bits aléatoire suivant une distribution normale.
 Il rajoute une séquence de départ pour la forme uniquement, cette dernière n'est pas exploitée dans le receveur.
-Les bits sont ensuite codés dans un code PAM-2 ou les 0 deviennent $-1$ et les 1 restent 1.
+Les bits sont ensuite codés dans un code PAM-2 où les 0 deviennent $-1$ et les 1 restent 1.
 
-Afin de diviser le spectre fréquentiel pour y définir des canaux, il faut s'assurer que les messages envoyées se limite à leur bande allouée.
-Pour ce faire nous utilise le filtre en cosinus surélevé qui à la merveilleuse propriété que pour un signal avec un durée de symbole $\xi$ seconde, il ne consommera que $\frac{\xi}{2}$ largeur de spectre dans le domaine fréquentiel.
+Afin de diviser le spectre fréquentiel pour y définir des canaux, il faut s'assurer que les messages envoyés se limite à leur bande allouée.
+Pour ce faire nous utilise le filtre en cosinus surélevé qui à la merveilleuse propriété que pour un signal avec un durée de symbole de $T_b$ seconde, il ne consommera que $\frac{1}{2T_b}$ largeur de spectre dans le domaine fréquentiel.
 C'est la meilleur efficacité spectrale atteignable mathématiquement.
-Un soucis survient avec l'utilisation de ce filtre, c'est que le signal codé maintient son amplitude maximale durant un bref instant, puis chute rapidement.
+Un soucis survient avec l'utilisation de ce filtre, c'est que le signal codé maintient son amplitude maximale, dénommé plafond, durant un bref instant puis chute rapidement.
 Ce type de réponse n'est pas utilisable en pratique car la fréquence de capture d'échantillons dans le receveur n'est pas monotone et stable, ni même en phase.
-Pour adresser ce problème, le filtre maintient son plafond durant un instant plus allongé, mais aux prix de flancs montant et descendant plus raides car la période d'expression d'un symbole n'est pas augmenté.
+Pour adresser ce problème, nous faisons maintenir son plafond plus longtemps, mais aux prix de flancs montant et descendant plus raides car la période d'expression d'un symbole n'est pas augmenté.
 Ces flancs plus raides entrainent une plus grand consommation de bande spectrale, nous définissons une marge au signal de $1+\alpha$ largeur de bande avec $0\leq\alpha\leq1$, dénommé \og{}facteur de roll-off\fg{}.
-Ce facteur contrôle le temps de \og{}plafond\fg{} du symbole dans le domaine fréquentiel.
+Ce facteur contrôle l'effet du temps de plafond du symbole dans le domaine fréquentiel.
 Dans notre implémentation, nous avons choisi un facteur de \num{0.4} arbitrairement.
 
 La description du filtre précédemment faite s'applique au domaine continue.
 Quand nous passons dans le domaine discret, le temps d'échantillonnage doit être pris en compte.
 Si nous n'utilisons qu'un seul échantillon pour convoluer le filtre en cosinus surélevé, sa réponse impulsionnelle sera semblable à une impulsion de Dirac, avec un consommation fréquentielle infinie, ce qui est l'opposé de ce qui est désiré.
-Si nous utilisons une infinité d'échantillon, nous obtiendrons une réponse parfaite semblable au domaine continue.
-Maintenant que les extrémités sont définies, il est nécessaire de savoir combien d'échantillons aux minimums sont nécessaires pour garder les spectres de différents canaux séparés.
+Et si nous utilisons une infinité d'échantillon, nous obtiendrons une réponse parfaite semblable au domaine continue.
+Connaissant les extrémités, nous nous intéressons à savoir combien d'échantillons au minimum sont nécessaires pour garder les spectres de différents canaux séparés.
 L'équation~(\ref{eqn:calcule-de-beta-final}) répond à cette question.
 En partant de l'équation~(\ref{eqn:calcule-de-beta-initial}) qui fixe les contraintes.
 
@@ -186,17 +186,17 @@ Puisque le premier canal non-modulé sera \og{}single-sideband\fg{} $\frac{1}{2T
 \end{align}
 Et puisque nous n'aimons pas ce qui n'est pas linéaire, nous prenons dans la simulation $\beta = 4N$.
 
-Un dernier paramètre à décider dans la construction du filtre numérique et la longueur de la réponse impulsionnelle qui va sert à convoluer le signal.
+Un dernier paramètre à décider dans la construction du filtre numérique et la longueur de la réponse impulsionnelle qui va servir à convoluer le signal.
 Pour que le filtrage respecte parfaitement les caractéristiques que nous lui avons défini, il lui faut une longueur infini.
 Ceci n'étant pas possible en pratique, la réponse doit être tronquée tout en gardant le maximum de puissance.
 Par essaies empiriques, nous avons déterminé que 20 fois le taux de sur-échantillonnage est une bonne valeur.
 
-Les filtres générés et leur réponse impulsionnelle obtenues, nous les modulons par les porteuses avant d'être convoluées avec le signal.
+Les filtres générés et leur réponse impulsionnelle obtenues, nous les modulons par les porteuses avant d'être convolués avec le signal.
 Nous prenons la liberté d'éloigner les porteuses un peu plus que nécessaire avec le paramètre \texttt{L} défini dans la simulation présentée comme \num{1.25}.
-Ce paramètre multiplie la bande de fréquence séparant 2 porteuses côté-à-côté.
+Ce paramètre multiplie la bande de fréquence séparant 2 porteuses côte-à-côte.
 Nous avons fait ce choix car autrement, les fréquences de coupures de filtres servant à séparer les canaux se touchent à \SI{-3}{\decibel}, laissant possiblement beaucoup d'interférence entre canaux. 
 Si nous pouvons nous permettre cette séparation, c'est parce que nous avons calculé le taux de sur-échantillonnage avec un facteur de roll-off à 1, or dans la simulation nous l'avons configuré à \num{0.4}.
-Cela nous offre de la marge pour séparer les canaux, tant que $L \leq \frac{1+1}{1+\num{0.4}} = \num{1.4287}$.
+Cela nous offre de la marge pour séparer les canaux tant que $L \leq \frac{1+1}{1+\num{0.4}} = \num{1.4287}$.
 Nous obtenons les impulsions présentées à la figure~\ref{fig:impulse}.
 Cette figure présente les 3 impulsions nécessaires pour multiplexer en 3 canaux.
 Il est intéressant de constater que l'impulsion du canal 2 est inversée en amplitude.
@@ -211,7 +211,7 @@ Il est intéressant de constater que l'impulsion du canal 2 est inversée en amp
 	\label{fig:impulse}
 \end{figure}
 
-Les signaux modulés, leur puissance est normalisée à une quantité de milliwatt par seconde en divisant/multipliant les amplitudes par le facteur adéquat.
+Les signaux modulés, leur puissance est normalisée à une quantité de milliwatt par seconde en multipliant les amplitudes par le facteur adéquat.
 La puissance de chaque canal est évaluée en intégrant la norme au carré sur l'impédance caractéristique du milieu de propagation.
 
 \begin{equation}
@@ -230,27 +230,27 @@ Un exemple de ce récapitulatif est présenté à la figure~\ref{fig:sender}.
 \end{figure}
 
 \subsection{Canal}
-Le fichier \texttt{canal.m} consultable à l'annexe~\ref{app:channel} à pour mission de simuler les effets du canal de communication.
+Le fichier \texttt{canal.m}, consultable à l'annexe~\ref{app:channel}, à pour mission de simuler les effets du canal de communication.
 Nous nous attendons à ce qu'il se comporte comme un filtre passe-bas, c.-à-d. une atténuation des amplitudes et un décalage temporelle.
 Tout cela accompagné de bruit parasite.
 
-Nous nous attendons à ce que le bruit sois de type AWGN, Additive white Gaussian noise, pouvant être symbolisé par une variable aléatoire de distribution normale et de moyenne nulle $g[k]\sim\mathcal{N}(0,\sigma^2)$.
+Nous nous attendons à ce que le bruit sois de type AWGN, Additive White Gaussian Noise, pouvant être symbolisé par une variable aléatoire de distribution normale et de moyenne nulle $g[k]\sim\mathcal{N}(0,\sigma^2)$.
 Tout commence par la génération d'un vecteur aléatoire de distribution normale de même taille que le vecteur de donnée.
 Ce vecteur aléatoire est ensuite filtré pour ne pas contenir de fréquence supérieure à celle de Nyquist.
-L'intensité du bruit se règle en multipliant le vecteur obtenu, qui est de variance 1, par l'écart-type de la variance désiré.
+L'intensité du bruit se règle en multipliant le vecteur obtenu, qui est de variance 1, par l'écart-type de la variance désirée.
 Un facteur d'atténuation A borné tel que $\num{0.6} \leq A \leq \num{0.9}$ est également généré.
 Le script effectue ensuite $S_2[k] = A \cdot S_1[k] + g[k]$ pour appliquer l'atténuation et le bruit.
 Du \og{}zero-padding\fg{} est ajouté au début du signal pour simuler un décalage temporel.
 
 \subsection{Receveur}
-Le fichier \texttt{receiver.m} consultable à l'annexe~\ref{app:receiver} se charge de ramener les signaux transmis en bande de base et prend des décisions sur les valeurs mesurées à tous les $T_b$ instants en espérant retrouver le signal original.
+Le fichier \texttt{receiver.m}, consultable à l'annexe~\ref{app:receiver}, se charge de ramener les signaux transmis en bande de base et prend des décisions sur les valeurs mesurées à tous les $T_b$ instants en espérant retrouver le signal original.
 
 Le script commence par générer des filtres de type Butterworth qui vont lui permettre de séparer les canaux.
 Pour filtrer, on commence par obtenir la fraction polynomiale représentant le filtre analogique.
 De cette fonction, on calcule la réponse fréquentiel entre la fréquence 0 et la fréquence d'échantillonnage.
 On applique la transformé de Fourier inverse à cette réponse fréquentiel, et nous obtenons la réponse impulsionnelle du filtre.
 Il suffit dès lors de convoluer les échantillons temporels de notre signal avec les réponses impulsionnelles calculées et nous séparons ainsi les bandes spectrales.
-Nous calculons des filtres d'ordre 10, la figure~\ref{fig:filters} et ~\ref{fig:grpdelay} présentent les filtres permettant des séparer les deux canaux utilisé dans cette simulation.
+Nous calculons des filtres d'ordre 10, la figure~\ref{fig:filters} et \ref{fig:grpdelay} présentent les filtres permettant des séparer les deux canaux utilisé dans cette simulation.
 
 Une fois les canaux séparés, il faut les ramener en bande de base.
 On ne peut pas simplement diviser les signaux pas un cosinus de même fréquence que la porteuse car le déphasage entre les deux laisserait une composante sinusoïdale parasite dans nos échantillons démodulés.
