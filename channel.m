@@ -14,9 +14,10 @@ noise_2 = noise_2(impulseL/2:end-impulseL/2);
 alpha = (0.90-0.60)*rand([1 1])+0.60;
 
 % increase noise with variance
-variance = 0;
 std_dev = sqrt(variance);
 noise_3 = noise_2*std_dev;
 
 data = alpha*data+noise_3;
 data = [zeros(shift,1); data];
+
+N0 = variance*numel(data);

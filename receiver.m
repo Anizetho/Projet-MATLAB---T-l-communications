@@ -54,18 +54,18 @@ stem(s2i, s2t(s2i,2), 'r*', 'MarkerSize', 8.0)
 grid, hold off
 
 %% plot visual representation of the transmission
-figure
-subplot(2,1,1)
-stem(linspace(0, len2*Tn, len2), s2High)
-title('Representation temporelle du signal recu')
-ylabel('Amplitude (v)'), xlabel('Times (s)')
-legend(strcat("Canal ", num2str((1:N)')), 'Location', 'SouthWest')
-grid
+% figure
+% subplot(2,1,1)
+% stem(linspace(0, len2*Tn, len2), s2High)
+% title('Representation temporelle du signal recu')
+% ylabel('Amplitude (v)'), xlabel('Times (s)')
+% legend(strcat("Canal ", num2str((1:N)')), 'Location', 'SouthWest')
+% grid
 
-subplot(2,1,2)
-plot(linspace(0, 1/Tn-1, len2), pow2db(abs(fft(s2High/len2)).^2/Z0)+30)
-ylim([-60 10])
-title('Representation frequentielle du signal recu')
-ylabel('Puissance (dBm)'), xlabel('Frequency (Hz)')
-legend(strcat("Canal ", num2str((1:N)')), 'Location', 'North')
-grid
+% subplot(2,1,2)
+% plot(linspace(0, 1/Tn-1, len2), pow2db(abs(fft(s2High/len2)).^2/Z0))
+% ylim([-60 0])
+% title('Representation frequentielle du signal recu')
+% ylabel('Puissance (dBm)'), xlabel('Frequency (Hz)')
+% legend(strcat("Canal ", num2str((1:N)')), 'Location', 'North')
+% grid
