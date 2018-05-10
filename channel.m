@@ -11,7 +11,7 @@ noise_2 = conv(noise_f, noise_1);
 noise_2 = noise_2(impulseL/2:end-impulseL/2);
 
 % damping factor; between 0.60<=x<=0.90
-alpha = (0.90-0.60)*rand([1 1])+0.60;
+alpha = 0.8; %(0.90-0.60)*rand([1 1])+0.60;
 
 % increase noise with variance
 std_dev = sqrt(variance);
