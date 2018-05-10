@@ -5,7 +5,6 @@
 
 % calculate the bandwidth limits for each channel
 cutoff = [carfreq-1/Tb carfreq+1/Tb]*2*Tn;
-if N == 1, cutoff = [0 0.9999]; end
 % pre-allocate filters matrix
 H = zeros(impulseL, N);
 
@@ -39,7 +38,7 @@ s2 = conv2(rcos, 1, s2);
 % find filters delay
 [~,i] = max(H);
 % compensate the start trame
-s2t = s2(span*beta+i+shift-3:end, :);
+s2t = s2(span*beta+i+shift-1:end, :);
 % generate the index vector
 s2i = 1:beta:beta*size(x,1);
 % extract the values at index
@@ -49,23 +48,23 @@ decoded = decoded>0;
 
 % hit markers *PEW* *PEW*
 figure, hold on
-stem(s2t(:,2))
-stem(s2i, s2t(s2i,2), 'r*', 'MarkerSize', 8.0)
+stem(s2t(:,1))
+stem(s2i, s2t(s2i,1), 'r*', 'MarkerSize', 8.0)
 grid, hold off
 
 %% plot visual representation of the transmission
-% figure
-% subplot(2,1,1)
-% stem(linspace(0, len2*Tn, len2), s2High)
-% title('Representation temporelle du signal recu')
-% ylabel('Amplitude (v)'), xlabel('Times (s)')
-% legend(strcat("Canal ", num2str((1:N)')), 'Location', 'SouthWest')
-% grid
+figure
+subplot(2,1,1)
+stem(linspace(0, len2*Tn, len2), s2High)
+title('Representation temporelle du signal recu')
+ylabel('Amplitude (v)'), xlabel('Times (s)')
+legend(strcat("Canal ", num2str((1:N)')), 'Location', 'NorthEast')
+grid
 
-% subplot(2,1,2)
-% plot(linspace(0, 1/Tn-1, len2), pow2db(abs(fft(s2High/len2)).^2/Z0))
-% ylim([-60 0])
-% title('Representation frequentielle du signal recu')
-% ylabel('Puissance (dBm)'), xlabel('Frequency (Hz)')
-% legend(strcat("Canal ", num2str((1:N)')), 'Location', 'North')
-% grid
+subplot(2,1,2)
+semilogy(linspace(0, 1/Tn-1, len2), abs(fft(s2High/len2)).^2)
+ylim([10^-6 10^0])
+title('Representation frequentielle du signal recu')
+ylabel('Puissance (dBm)'), xlabel('Frequency (Hz)')
+legend(strcat("Canal ", num2str((1:N)')), 'Location', 'North')
+grid

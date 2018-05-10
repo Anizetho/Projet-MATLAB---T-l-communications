@@ -13,7 +13,7 @@ a = upsample(a, beta);
 s1 = conv2(rcos, 1, a);
 len1 = size(s1, 1);
 % carrier frequencies
-carfreq = (0:N-1)'*L*2/Tb;
+carfreq = (0:N-1)'*2/Tb;
 
 %% plot impulsions
 iX = linspace(0, span/1e2, 1e2*span+1);
@@ -33,16 +33,11 @@ s1High = s1.*cos(2*pi*carfreq'.*t);
 
 % normalise power to 'pwr' mW
 pwrTimesSec = pwr*len1*Tn; % mW per second * transmission time
-avgPower = bandpower(s1High)/Z0*1000/(pwrTimesSec);
+avgPower = bandpower(s1High)*1000/(pwrTimesSec);
 s1High = s1High./sqrt(avgPower);
 
 % sum all channels before transmission
 data = sum(s1High, 2);
-
-% calculate the energy in 1 bit for error measurements
-Eb = bandpower(data); % overall Watt
-Eb = Eb*len1*Tn;      % convert to Joule
-Eb = Eb/(M+16)/N;     % divide by qte of bits
 
 %% plot visual representation of the transmission
 figure
@@ -50,12 +45,12 @@ subplot(2,1,1)
 stem(linspace(0, len1*Tn, len1), s1High)
 title('Representation temporelle du signal envoye')
 ylabel('Amplitude (v)'), xlabel('Times (s)')
-legend(strcat("Canal ", num2str((1:N)')), 'Location', 'SouthWest')
+legend(strcat("Canal ", num2str((1:N)')), 'Location', 'NorthEast')
 grid
 
 subplot(2,1,2)
-plot(linspace(0, 1/Tn-1, len1), pow2db(abs(fft(s1High/len1)).^2/Z0))
-ylim([-60 0])
+semilogy(linspace(0, 1/Tn-1, len1), abs(fft(s1High/len1)).^2)
+ylim([10^-6 10^0])
 title('Representation frequentielle du signal envoye')
 ylabel('Puissance (dBm)'), xlabel('Frequency (Hz)')
 legend(strcat("Canal ", num2str((1:N)')), 'Location', 'North')

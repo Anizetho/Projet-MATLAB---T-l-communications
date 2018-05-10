@@ -13,14 +13,12 @@ M = 50;       % message size (bits)
 R = 10;       % bit rate
 Tb = 1/R;     % bit duration
 roll = 0.40;  % rolloff factor
-L = 1.25;     % bandwidth xTb
 beta = 4*N;   % upsampling factor
 Tn = Tb/beta; % upsample sampling rate
 span = 20;    % rcos span for thinner bandwidth consumption
 pwr = 50;     % channel power in mW
 
 % Channel
-Z0 = 50;      % characteristic impedance
 shift = 4;    % samples delay
 variance = 0; % noise variance
 
