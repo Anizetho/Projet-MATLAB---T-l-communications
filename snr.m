@@ -10,11 +10,11 @@ semilogy(t, y)
 grid
 
 % our case
-BER = zeros([1 12]);
-ebn0 = zeros([1 12]);
+BER = zeros([1 5]);
+ebn0 = zeros([1 5]);
 
-for uniqIDX = 0:11
-    variance = uniqIDX;
+for uniqIDX = 0:4
+    variance = 1/(2^uniqIDX);
     main;
     Ptotal = sum(data.^2);
     Pnoise = variance*length(data);
