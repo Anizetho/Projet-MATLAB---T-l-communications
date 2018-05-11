@@ -7,10 +7,10 @@ codesymbol = @(x)x.*2-1;
 
 % System
 N = 3;        % available channels
-M = 1e6;       % message size (bits)
+M = 1e6;      % message size (bits)
 
 % Sender
-R = 1e6;       % bit rate
+R = 1e6;      % bit rate
 Tb = 1/R;     % bit duration
 roll = 0.40;  % rolloff factor
 beta = 4*N;   % upsampling factor
@@ -20,7 +20,7 @@ pwr = 50;     % channel power in mW
 
 % Channel
 shift = 4;    % samples delay
-% variance = 0; % noise variance
+variance = 1; % noise variance
 
 % Receiver
 impulseL = 128;
