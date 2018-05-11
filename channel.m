@@ -15,9 +15,7 @@ alpha = 0.8; %(0.90-0.60)*rand([1 1])+0.60;
 
 % increase noise with variance
 std_dev = sqrt(variance);
-noise_3 = noise_2*std_dev;
-
-data = alpha*data+noise_3;
+data = alpha*data+std_dev*noise_2;
 data = [zeros(shift,1); data];
 
 N0 = variance*numel(data);
