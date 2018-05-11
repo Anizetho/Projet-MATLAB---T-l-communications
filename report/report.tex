@@ -116,12 +116,11 @@ Ils consistent en :
 \end{description}
 
 \subsection{Fichier principale}
-Le fichier principale, aussi nommé \og{}main\fg{} par son nom anglais, se charge de lancer la simulation dans un ordre logique.
-Le fichier est consultable à l'annexe~\ref{app:main}.
+Le fichier principale, nommé \texttt{main.m} par son nom anglais et consultable à l'annexe~\ref{app:main}, se charge principalement de lancer les scripts composant la simulation dans un ordre logique.
 Son contenu est minime, il commence par nettoyer le plan de travail des variables et figures résiduelles.
-Il lance ensuite les scripts dans l'ordre parameters $\rightarrow$ sender $\rightarrow$ channel $\rightarrow$ receiver.
+Il lance ensuite les scripts dans l'ordre : \texttt{parameters.m} $\rightarrow$ \texttt{sender.m} $\rightarrow$ \texttt{channel.m} $\rightarrow$ \texttt{receiver.m}.
 
-Une fois la simulation terminée, il affiche une figure comparant le signal dans un canal émis par l'émetteur, au signal recomposé dans ce même canal par le receveur.
+Une fois la simulation terminée, il affiche également une figure comparant le signal dans un canal émis par l'émetteur, au signal recomposé dans ce même canal par le receveur.
 La figure~\ref{fig:comparaison} présente un exemple de cette comparaison.
 On peut y apercevoir que le signal recomposé est délayé par rapport au signal émis, et que ses amplitudes aux pics isolés est quasiment divisées par deux.
 Cela est normal étant donné que l'on retrouve plus de fréquence dans un pic isolé que dans une succession à la même amplitude.
@@ -140,8 +139,7 @@ Ce pic souffrira donc plus fortement au filtrage fréquentiel.
 \end{figure}
 
 \subsection{Paramètres}
-Le fichier \texttt{parameters.m} offre un accès rapide et concentré aux différents paramètres influençant la simulation tel que la quantité de canaux fréquentiel disponibles, la taille du message à envoyer, ou encore la vitesse d'envoie.
-Ce fichier est consultable à l'annexe~\ref{app:paremeters}.
+Le fichier \texttt{parameters.m}, consultable à l'annexe~\ref{app:paremeters}, offre un accès rapide et concentré aux différents paramètres influençant la simulation tel que la quantité de canaux fréquentiel disponibles, la taille du message à envoyer, ou encore la vitesse d'envoie.
 Chaque paramètre est accompagné d'un commentaire expliquant dument son utilité.
 
 \subsection{Émetteur}
@@ -304,6 +302,10 @@ La figure~\ref{fig:decimate} présente un exemple de capture d'échantillons eff
 
 %%%%%%%%%%%%%%%%%%%%%%
 \section{Performances}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Problèmes connus}
 
 
 %%%%%%%%%%%%%%%%%%%%
