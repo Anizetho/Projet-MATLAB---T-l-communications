@@ -25,15 +25,15 @@
     \captionsetup{labelfont={bf,sf,color=gray}}
 \usepackage{pdfpages}
 \usepackage{minted}
-	\setminted{linenos}
-	\setminted{fontsize=\footnotesize}
-	\setminted{bgcolor=bglst}
-	\setminted{style=borland}
+    \setminted{linenos}
+    \setminted{fontsize=\footnotesize}
+    \setminted{bgcolor=bglst}
+    \setminted{style=borland}
 \usepackage{enumitem}
 
 % Keep lasts
 \usepackage[french]{babel}
-	\frenchsetup{SmallCapsFigTabCaptions=false}
+    \frenchsetup{SmallCapsFigTabCaptions=false}
 \usepackage[expansion]{microtype}
 \usepackage[luatex, backref]{hyperref}
     \hypersetup{colorlinks, breaklinks, urlcolor=red,
@@ -56,7 +56,7 @@
     {\rm\sffamily\LARGE Techniques de transmission et traitement du signal\par}
     \vspace{3mm}
     {\sffamily\bfseries\LARGE Simulation d’une chaîne de transmission\\
-    						  numérique avec Matlab\textregistered{}\par}
+                              numérique avec MATLAB\textregistered{}\par}
     \vspace{5mm}
     \rule{\linewidth}{1.5pt}%
     \vspace{1cm}
@@ -91,10 +91,12 @@
 \newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%
-\section{Introduction}
+\phantomsection
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
 L'objectif de ce projet est de simuler la couche physique d'un protocol de communication, c'est-à-dire le niveau 1 du modèle OSI.
-La simulation est réalisée à l'aide du logiciel Matlab\textregistered{} édité par Mathworks\textregistered{}.
-Les contraintes imposées dans la simulation sont de tenir compte de plusieurs émetteurs et receveurs pouvant communiquer en même temps.
+La simulation est réalisée à l'aide du logiciel MATLAB\textregistered{} édité par Mathworks\textregistered{}.
+Une contrainte imposée dans la simulation est de tenir compte de plusieurs émetteurs et receveurs pouvant communiquer simultanément.
 Pour répondre à cette contrainte, la couche physique implémentée utilise le multiplexage fréquentiel.
 
 Ce document reprend la conception du projet et les choix qui ont dû y être décidés, accompagnés de leur explication.
@@ -107,12 +109,12 @@ La section~\ref{sec:implementation} décrit le modus operandi réalisé dans les
 Ces fichiers peuvent être consultés à l'annexe~\ref{sec:fichiers-sources}.
 Ils consistent en :
 \begin{description}[align=right,labelwidth=2cm,labelindent=1cm]
-	\item[main.m] lance les scripts dans l'ordre logique.
-	\item[parameters.m] configure paramètres de simulation.
-	\item[sender.m] génère les données aléatoirement, puis sépare les canaux
-		fréquentiellement.
-	\item[channel.m] simule un canal de communication en atténuant et filtrant les signaux.
-	\item[receiver.m] démodule les signaux reçus et tente de recomposer le signal émis.
+    \item[main.m] lance les scripts dans l'ordre logique.
+    \item[parameters.m] configure paramètres de simulation.
+    \item[sender.m] génère les données aléatoirement, puis sépare les canaux
+        fréquentiellement.
+    \item[channel.m] simule un canal de communication en atténuant et filtrant les signaux.
+    \item[receiver.m] démodule les signaux reçus et tente de recomposer le signal émis.
 \end{description}
 
 \subsection{Fichier principale}
@@ -127,15 +129,15 @@ Cela est normal étant donné que l'on retrouve plus de fréquence dans un pic i
 Ce pic souffrira donc plus fortement au filtrage fréquentiel.
 
 \begin{figure}[p]
-	\centering
-	\includegraphics[height=0.45\textheight]{eps/comparaison.eps}
-	\caption{Comparaison entre le signal en bande de base émis dans l'émetteur et celui
-			 recomposé dans le receveur.
-			 Le signal reçu est décalé d'approximativement 1 seconde par rapport au signal
-			 émis.
-			 Le signal reçu est également plus sévèrement atténué aux pics isolés qui
-			 contiennent des plus hautes fréquences.}
-	\label{fig:comparaison}
+    \centering
+    \includegraphics[height=0.45\textheight]{eps/comparaison.eps}
+    \caption{Comparaison entre le signal en bande de base émis dans l'émetteur et celui
+             recomposé dans le receveur.
+             Le signal reçu est décalé d'approximativement 1 seconde par rapport au signal
+             émis.
+             Le signal reçu est également plus sévèrement atténué aux pics isolés qui
+             contiennent des plus hautes fréquences.}
+    \label{fig:comparaison}
 \end{figure}
 
 \subsection{Paramètres}
@@ -144,20 +146,33 @@ Chaque paramètre est accompagné d'un commentaire expliquant dument son utilit�
 
 \subsection{Émetteur}
 Le fichier \texttt{emetteur.m}, consultable à l'annexe~\ref{app:sender}, commence la simulation proprement dite.
-Il débute par générer une séquence de bits aléatoire suivant une distribution normale.
-Il rajoute une séquence de départ pour la forme uniquement, cette dernière n'est pas exploitée dans le receveur.
-Les bits sont ensuite codés dans un code PAM-2 où les 0 deviennent $-1$ et les 1 restent 1.
+Il débute par générer une séquence de bits aléatoire suivant une distribution normale grâce à \mintinline{matlab}{randn()}.
 
+\subsubsection{Séquence de départ}
+Il rajoute une séquence de départ pour la forme uniquement.
+Cette dernière n'est pas exploitée dans le receveur, mais trouve son utilité dans l'appréciation qualitative du canal par nos yeux.
+Cette séquence consiste premièrement en 4 oscillations de symboles opposés $(1,0,1,0,1,0,1,0)$, puis de 8 symboles identiques $(1,1,1,1,1,1,1,1)$.
+L'intérêt de cette séquence est de constater la réponse du canal aux plus hautes fréquences du signal, et l'amplitude RMS d'un message constant.
+Cette séquence de départ est aisément distinguable à la figure~\ref{fig:comparaison}.
+
+Après l'ajout de la séquence de départ, les bits sont codés dans un code PAM-2 où les 0 deviennent $-1$ et les 1 restent 1.
+
+\subsubsection{Cosinus surélevé}
 Afin de diviser le spectre fréquentiel pour y définir des canaux, il faut s'assurer que les messages envoyés se limite à leur bande allouée.
-Pour ce faire nous utilise le filtre en cosinus surélevé qui à la merveilleuse propriété que pour un signal avec un durée de symbole de $T_b$ seconde, il ne consommera que $\frac{1}{2T_b}$ largeur de spectre dans le domaine fréquentiel.
-C'est la meilleur efficacité spectrale atteignable mathématiquement.
-Un soucis survient avec l'utilisation de ce filtre, c'est que le signal codé maintient son amplitude maximale, dénommé plafond, durant un bref instant puis chute rapidement.
-Ce type de réponse n'est pas utilisable en pratique car la fréquence de capture d'échantillons dans le receveur n'est pas monotone et stable, ni même en phase.
-Pour adresser ce problème, nous faisons maintenir son plafond plus longtemps, mais aux prix de flancs montant et descendant plus raides car la période d'expression d'un symbole n'est pas augmenté.
-Ces flancs plus raides entrainent une plus grand consommation de bande spectrale, nous définissons une marge au signal de $1+\alpha$ largeur de bande avec $0\leq\alpha\leq1$, dénommé \og{}facteur de roll-off\fg{}.
-Ce facteur contrôle l'effet du temps de plafond du symbole dans le domaine fréquentiel.
-Dans notre implémentation, nous avons choisi un facteur de \num{0.4} arbitrairement.
+Pour ce faire nous pouvons utiliser le filtre en sinus cardinal qui à la merveilleuse propriété que pour un signal avec un durée de symbole de $T_b$ seconde, il ne consommera que $\frac{1}{2T_b}$ largeur de spectre dans le domaine fréquentiel.
+C'est mathématiquement la meilleur efficacité spectrale atteignable.
 
+Un soucis survient avec l'utilisation de ce filtre en pratique, c'est que le signal codé maintient son amplitude maximale, dénommée plafond, durant un bref instant puis chute brusquement.
+Ce type de réponse n'est pas utilisable en pratique car la fréquence de capture d'échantillons dans le receveur n'est ni monotone, ni même en phase.
+Pour adresser ce problème, nous utilisons une version alternative du sinus cardinal nommée le filtre en cosinus surélevé.
+Ce filtre a la particularité de maintenir son plafond plus longtemps, mais aux prix de flancs montant et descendant plus raides car la période d'expression d'un symbole n'est pas augmentée.
+Ces flancs plus raides entrainent une plus grand consommation de bande spectrale.
+Le cosinus surélevé défini une largeur de bande consommée $1+\alpha$ avec \alpha{} dénommé \og{}facteur de roll-off\fg{} compris dans l'interval $0\leq\alpha\leq1$.
+Un $\alpha = 0$ rend le filtre égale à celui d'un sinus cardinal.
+Ce facteur contrôle le temps de plafond d'un symbole dans le domaine temporel.
+Dans notre implémentation, nous avons choisi un facteur $\alpha = \num{0.4}$ arbitrairement.
+
+\subsubsection{Sur-échantillonnage}
 La description du filtre précédemment faite s'applique au domaine continue.
 Quand nous passons dans le domaine discret, le temps d'échantillonnage doit être pris en compte.
 Si nous n'utilisons qu'un seul échantillon pour convoluer le filtre en cosinus surélevé, sa réponse impulsionnelle sera semblable à une impulsion de Dirac, avec un consommation fréquentielle infinie, ce qui est l'opposé de ce qui est désiré.
@@ -189,42 +204,40 @@ Pour que le filtrage respecte parfaitement les caractéristiques que nous lui av
 Ceci n'étant pas possible en pratique, la réponse doit être tronquée tout en gardant le maximum de puissance.
 Par essaies empiriques, nous avons déterminé que 20 fois le taux de sur-échantillonnage est une bonne valeur.
 
+\subsubsection{Modulation}
 Les filtres générés et leur réponse impulsionnelle obtenues, nous les modulons par les porteuses avant d'être convolués avec le signal.
-Nous prenons la liberté d'éloigner les porteuses un peu plus que nécessaire avec le paramètre \texttt{L} défini dans la simulation présentée comme \num{1.25}.
-Ce paramètre multiplie la bande de fréquence séparant 2 porteuses côte-à-côte.
-Nous avons fait ce choix car autrement, les fréquences de coupures de filtres servant à séparer les canaux se touchent à \SI{-3}{\decibel}, laissant possiblement beaucoup d'interférence entre canaux. 
-Si nous pouvons nous permettre cette séparation, c'est parce que nous avons calculé le taux de sur-échantillonnage avec un facteur de roll-off à 1, or dans la simulation nous l'avons configuré à \num{0.4}.
-Cela nous offre de la marge pour séparer les canaux tant que $L \leq \frac{1+1}{1+\num{0.4}} = \num{1.4287}$.
+Les fréquences des porteuses sont obtenues en séparant chaque canal par $\frac{1}{2Tb}$
 Nous obtenons les impulsions présentées à la figure~\ref{fig:impulse}.
 Cette figure présente les 3 impulsions nécessaires pour multiplexer en 3 canaux.
 Il est intéressant de constater que l'impulsion du canal 2 est inversée en amplitude.
 
 \begin{figure}[p]
-	\centering
-	\includegraphics[height=0.4\textheight]{eps/impulse.eps}
-	\caption{Représentation temporelle des impulsions utilisées pour multiplexer en 3 canaux.
-			 Chaque des impulsions est sa réponse en bande de base modulée par sa porteuse.
-			 Il est intéressant de constater que l'impulsion du canal 2 est inversée en
-			 amplitude.}
-	\label{fig:impulse}
+    \centering
+    \includegraphics[height=0.4\textheight]{eps/impulse.eps}
+    \caption{Représentation temporelle des impulsions utilisées pour multiplexer en 3 canaux.
+             Chaque des impulsions est sa réponse en bande de base modulée par sa porteuse.
+             Il est intéressant de constater que l'impulsion du canal 2 est inversée en
+             amplitude.}
+    \label{fig:impulse}
 \end{figure}
 
-Les signaux modulés, leur puissance est normalisée à une quantité de milliwatt par seconde en multipliant les amplitudes par le facteur adéquat.
+Les signaux modulés, leur puissance est normalisée à une quantité de milliwatt en multipliant les amplitudes par le facteur adéquat.
 La puissance de chaque canal est évaluée en intégrant la norme au carré sur l'impédance caractéristique du milieu de propagation.
+Dans notre simulation, nous avons choisi d'évaluer la puissance par $Z_0 = \SI{1}{\Omega}$
 
 \begin{equation}
-	P[s] = \frac{\frac{1}{N} \sum_{n = 0}^{N} s[n]^2}{Z_0}
+    P[s] = \frac{\frac{1}{N} \sum_{n = 0}^{N} s[n]^2}{Z_0}
 \end{equation}
 
-Le script \texttt{sender.m} affiche un récapitulatif de la transmission en temporel et fréquentiel avant de sommer tous les canaux pour les envoyer sur le seul lien physique disponible, le cable ou le rayonnement électro-magnétique.
+Le script \texttt{sender.m} affiche un récapitulatif de la transmission en temporel et fréquentiel avant de sommer tous les canaux pour les envoyer sur le seul lien physique disponible, le cable ou le rayonnement électromagnétique.
 Un exemple de ce récapitulatif est présenté à la figure~\ref{fig:sender}.
 
 \begin{figure}[p]
-	\centering
-	\includegraphics[height=0.45\textheight]{eps/sender.eps}
-	\caption{Signaux de 50 bits chacun envoyés sur 2 canaux fréquentiels au rythme de 10 bit/s
-			 avec une fréquence d'échantillonage de \SI{80}{\hertz}.}
-	\label{fig:sender}
+    \centering
+    \includegraphics[height=0.45\textheight]{eps/sender.eps}
+    \caption{Signaux de 50 bits chacun envoyés sur 2 canaux fréquentiels au rythme de 10 bit/s
+             avec une fréquence d'échantillonage de \SI{80}{\hertz}.}
+    \label{fig:sender}
 \end{figure}
 
 \subsection{Canal}
@@ -243,6 +256,7 @@ Du \og{}zero-padding\fg{} est ajouté au début du signal pour simuler un décal
 \subsection{Receveur}
 Le fichier \texttt{receiver.m}, consultable à l'annexe~\ref{app:receiver}, se charge de ramener les signaux transmis en bande de base et prend des décisions sur les valeurs mesurées à tous les $T_b$ instants en espérant retrouver le signal original.
 
+\subsubsection{Filtrage}
 Le script commence par générer des filtres de type Butterworth qui vont lui permettre de séparer les canaux.
 Pour filtrer, on commence par obtenir la fraction polynomiale représentant le filtre analogique.
 De cette fonction, on calcule la réponse fréquentiel entre la fréquence 0 et la fréquence d'échantillonnage.
@@ -250,6 +264,7 @@ On applique la transformé de Fourier inverse à cette réponse fréquentiel, et
 Il suffit dès lors de convoluer les échantillons temporels de notre signal avec les réponses impulsionnelles calculées et nous séparons ainsi les bandes spectrales.
 Nous calculons des filtres d'ordre 10, la figure~\ref{fig:filters} et \ref{fig:grpdelay} présentent les filtres permettant des séparer les deux canaux utilisé dans cette simulation.
 
+\subsubsection{Démodulation}
 Une fois les canaux séparés, il faut les ramener en bande de base.
 On ne peut pas simplement diviser les signaux pas un cosinus de même fréquence que la porteuse car le déphasage entre les deux laisserait une composante sinusoïdale parasite dans nos échantillons démodulés.
 Pour obtenir notre signal en bande de base, nous multiplions encore le signal modulé avec un cosinus à même fréquence, multiplier deux cosinus amène à additionner leur fréquence.
@@ -257,46 +272,50 @@ Nous filtrons ensuite ce signal doublement multiplié par un filtre passe-bas po
 En procédant de cette manière, nous contournons le problème d'estimation de la phase de la porteuse.
 
 \begin{figure}[p]
-	\centering
-	\includegraphics[height=0.4\textheight]{eps/filters.eps}
-	\caption{Réponse en amplitude des filtres de type Butterworth utilisés dans le receveur
-			 pour séparer les canaux.}
-	\label{fig:filters}
+    \centering
+    \includegraphics[height=0.4\textheight]{eps/filters.eps}
+    \caption{Réponse en amplitude des filtres de type Butterworth utilisés dans le receveur
+             pour séparer les canaux.}
+    \label{fig:filters}
 \end{figure}
 
 \begin{figure}[p]
-	\centering
-	\includegraphics[height=0.45\textheight]{eps/grpdelay.eps}
-	\caption{Retard de groupe des filtres de type Butterworth utilisés dans le receveur
-			 pour séparer les canaux.
-			 Le filtre 1 est un lowpass avec une fréquence de coupure à \SI{10}{\hertz}.
-			 Le filtre 2 est un bandpass avec une fréquence de coupure basse à
-			 \SI{25}{\hertz} et fréquence de coupure haute à \SI{35}{\hertz}.}
-	\label{fig:grpdelay}
+    \centering
+    \includegraphics[height=0.45\textheight]{eps/grpdelay.eps}
+    \caption{Retard de groupe des filtres de type Butterworth utilisés dans le receveur
+             pour séparer les canaux.
+             Le filtre 1 est un lowpass avec une fréquence de coupure à \SI{10}{\hertz}.
+             Le filtre 2 est un bandpass avec une fréquence de coupure basse à
+             \SI{25}{\hertz} et fréquence de coupure haute à \SI{35}{\hertz}.}
+    \label{fig:grpdelay}
 \end{figure}
 
+
+\subsubsection{Comparaison}
 Le script receveur affiche un récapitulatif de la transmission reçue, comme l'émetteur affiche une récapitulatif de la transmission envoyée.
 Ces récapitulatifs permettent de comparer les signaux émis avant d'être sommé dans l'environnement de transmission, \textit{e.g.} un câble, et les signaux reçus après les avoir séparés par filtrage.
 La figure~\ref{fig:receiver} du receveur doit être comparé avec la figure~\ref{fig:sender} de l'émetteur.
 On peut constater que : temporellement le receveur a un message décalé de quelques échantillons ; et fréquentiellement un signal atténué de quelques dBm.
 
 \begin{figure}[p]
-	\centering
-	\includegraphics[height=0.45\textheight]{eps/receiver.eps}
-	\caption{Signaux de 50 bits chacun envoyés sur 2 canaux fréquentiels au rythme de 10 bit/s
-			 avec une fréquence d'échantillonage de \SI{80}{\hertz}.}
-	\label{fig:receiver}
+    \centering
+    \includegraphics[height=0.45\textheight]{eps/receiver.eps}
+    \caption{Signaux de 50 bits chacun envoyés sur 2 canaux fréquentiels au rythme de 10 bit/s
+             avec une fréquence d'échantillonage de \SI{80}{\hertz}.}
+    \label{fig:receiver}
 \end{figure}
 
 Une fois le signal en bande de base recomposé, le recevoir doit repérer début du signal et capturer un échantillon tous les $T_b$ instant.
 Depuis cet échantillon capturé, il doit prendre la décision de choisir si le code transmis était $+1$ ou $-1$.
+La simulation se permet de calculer le délai généré pour savoir où le signal commence.
+Ceci est possible car nous disposons des réponses en phase de chaque filtres appliqués tout au long des calculs.
 La figure~\ref{fig:decimate} présente un exemple de capture d'échantillons effectuée par le receveur.
 
 \begin{figure}[p]
-	\centering
-	\includegraphics[height=0.45\textheight]{eps/decimate.eps}
-	\caption{Visualisation de la capture d'échantillons pour le décideur.}
-	\label{fig:decimate}
+    \centering
+    \includegraphics[height=0.45\textheight]{eps/decimate.eps}
+    \caption{Visualisation de la capture d'échantillons pour le décideur.}
+    \label{fig:decimate}
 \end{figure}
 
 
@@ -309,7 +328,9 @@ La figure~\ref{fig:decimate} présente un exemple de capture d'échantillons eff
 
 
 %%%%%%%%%%%%%%%%%%%%
-\section{Conclusion}
+\phantomsection
+\section*{Conclusion}
+\addcontentsline{toc}{section}{Conclusion}
 
 \appendix
 \clearpage
