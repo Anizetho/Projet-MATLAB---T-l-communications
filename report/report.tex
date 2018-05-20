@@ -222,8 +222,10 @@ Il est intéressant de constater que l'impulsion du canal 2 est inversée en amp
 \end{figure}
 
 Les signaux modulés, leur puissance est normalisée à une quantité de milliwatt en multipliant les amplitudes par le facteur adéquat.
+Nous normalisons la puissance du signal après la modulation car la puissance de la porteuse s'additionne au signal utile.
+Si nous le faisions avant, nous retrouverions une puissance deux fois plus grande dans le premier canal, sans porteuse, que dans les autres.
 La puissance de chaque canal est évaluée en intégrant la norme au carré sur l'impédance caractéristique du milieu de propagation.
-Dans notre simulation, nous avons choisi d'évaluer la puissance par $Z_0 = \SI{1}{\Omega}$
+Dans notre simulation, nous avons choisi d'évaluer la puissance par $Z_0 = \SI{1}{\Omega}$ et nous normalisons à \SI{200}{\milli\watt}.
 
 \begin{equation}
     P[s] = \frac{\frac{1}{N} \sum_{n = 0}^{N} s[n]^2}{Z_0}
@@ -326,6 +328,14 @@ La figure~\ref{fig:decimate} présente un exemple de capture d'échantillons eff
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Problèmes connus}
 
+\begin{tabular}{l|llll}
+& \bf Canal 1 & \bf Canal 2 & \bf Canal 3 & \bf Canal 4\\
+\hline
+\bf 1 actif  & 0.4310 & n/a    & n/a    & n/a\\
+\bf 2 actifs & 0.4101 & 0.4456 & n/a    & n/a\\
+\bf 3 actifs & 0.3918 & 0.4706 & 0.4703 & n/a\\
+\bf 4 actifs & 0.3762 & 0.5279 & 0.4161 & 0.5271
+\end{tabular}
 
 %%%%%%%%%%%%%%%%%%%%
 \phantomsection
@@ -362,8 +372,8 @@ La figure~\ref{fig:decimate} présente un exemple de capture d'échantillons eff
 \inputminted{matlab}{../filters.m}
 \label{app:filters}
 
-\subsection{snr.m}
-\inputminted{matlab}{../snr.m}
-\label{app:snr}
+\subsection{diagram.m}
+\inputminted{matlab}{../diagram.m}
+\label{app:diagram}
 
 \end{document}
