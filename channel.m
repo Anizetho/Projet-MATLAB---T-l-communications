@@ -5,17 +5,25 @@
 
 % gaussian noise
 noise_1 = randn([numel(data) 1]);
-[bf,af] = butter(1, 0.5);
+[bf,af] = butter(1, 0.99);
 noise_f = ifft(freqz(bf, af, impulseL, 'whole', 1/Tn));
 noise_2 = conv(noise_f, noise_1);
-noise_2 = noise_2(impulseL/2:end-impulseL/2);
+noise_2 = noise_2(1:end-impulseL+1);
 
-% damping factor; between 0.60<=x<=0.90
-alpha = 0.8; %(0.90-0.60)*rand([1 1])+0.60;
+if exist('gendiag', 'var')
+    % for fine-grained control of the noise in diagram.m
+    power_data = sum(data.^2);
+    power_noise = sum(noise_2.^2);
+    ratio = (power_data/power_noise)/10^(deter/10);
+    noise_2 = noise_2.*sqrt(ratio);
+    alpha = 1; std_dev = 1;
+    ebn0(uniqIDX) = snr(data, noise_2);
+else
+    % damping factor; between 0.60<=x<=0.90
+    alpha = (0.90-0.60)*rand([1 1])+0.60;
+    % increase noise with variance
+    std_dev = sqrt(variance);
+end
 
-% increase noise with variance
-std_dev = sqrt(variance);
 data = alpha*data+std_dev*noise_2;
 data = [zeros(shift,1); data];
-
-N0 = variance*numel(data);

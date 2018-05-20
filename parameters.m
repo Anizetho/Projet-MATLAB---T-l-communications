@@ -6,7 +6,7 @@
 codesymbol = @(x)x.*2-1;
 
 % System
-N = 3;        % available channels
+N = 2;        % available channels
 M = 1e6;      % message size (bits)
 
 % Sender
@@ -16,7 +16,7 @@ roll = 0.40;  % rolloff factor
 beta = 4*N;   % upsampling factor
 Tn = Tb/beta; % upsample sampling rate
 span = 20;    % rcos span for thinner bandwidth consumption
-pwr = 50;     % channel power in mW
+pwr = 200;     % channel power in mW
 
 % Channel
 shift = 4;    % samples delay

@@ -13,17 +13,17 @@ a = upsample(a, beta);
 s1 = conv2(rcos, 1, a);
 len1 = size(s1, 1);
 
-% normalise power to 'pwr' mW per second
-pwrTimesSec = pwr*len1*Tn;
-avgPower = bandpower(s1)*1000/(pwrTimesSec);
-s1 = s1./sqrt(avgPower);
-
 % carrier frequencies
 carfreq = (0:N-1)'*2/Tb;
 
 % modulate by carriers
 t = (0:Tn:(len1-1)*Tn)'*ones(1,N);
 s1High = s1.*cos(2*pi*carfreq'.*t);
+
+% normalise power to 'pwr' mW
+power = sum(s1High.^2, 1)/len1;
+ratio = (pwr*1e-3)./power;
+s1High = s1High.*sqrt(ratio);
 
 % sum all channels before transmission
 data = sum(s1High, 2);

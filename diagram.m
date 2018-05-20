@@ -4,20 +4,20 @@
 % Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
 % 2-PAM best case
-t = linspace(0, 10, length(data));
+t = linspace(0, 10, 1e3);
 y = 1/2*erfc(sqrt(10.^(t/10)));
 semilogy(t, y)
 grid
 
 % our case
-BER = zeros([1 5]);
-ebn0 = zeros([1 5]);
+dB2test = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+tries = numel(dB2test);
+BER = zeros([1 tries]);
+ebn0 = zeros([1 tries]);
+gendiag = true;
 
-for uniqIDX = 0:4
-    variance = 1/(2^uniqIDX);
+for uniqIDX = 1:tries
+    deter = dB2test(uniqIDX);
     main;
-    Ptotal = sum(data.^2);
-    Pnoise = variance*length(data);
-    BER(uniqIDX+1) = sum(errorRate)/3;
-    ebn0(uniqIDX+1) = Ptotal/Pnoise;
+    BER(uniqIDX) = sum(errorRate)/N;
 end

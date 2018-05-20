@@ -20,11 +20,14 @@ end
 
 % separate channels
 s2High = conv2(data, 1, H);
-% revert the effect of the sum in the sender
-s2High = s2High/N;
+len2 = size(s2High,1);
+
+% normalise power to 'pwr' mW
+power = sum(s2High.^2, 1)/len2;
+ratio = (pwr*1e-3)./power;
+s2High = s2High.*sqrt(ratio);
 
 % demodulate
-len2 = size(s2High,1);
 t = (0:Tn:(len2-1)*Tn)'*ones(1,N);
 s2 = s2High.*cos(2*pi*carfreq'.*t);
 s2(:,1) = s2High(:,1);
