@@ -14,10 +14,9 @@ dB2test = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 tries = numel(dB2test);
 BER = zeros([1 tries]);
 ebn0 = zeros([1 tries]);
-gendiag = true;
 
 for uniqIDX = 1:tries
-    deter = dB2test(uniqIDX);
+    forcedPwr = dB2test(uniqIDX);
     main;
     BER(uniqIDX) = sum(errorRate)/N;
 end

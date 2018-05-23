@@ -10,11 +10,11 @@ noise_f = ifft(freqz(bf, af, impulseL, 'whole', 1/Tn));
 noise_2 = conv(noise_f, noise_1);
 noise_2 = noise_2(1:end-impulseL+1);
 
-if exist('gendiag', 'var')
+if exist('forcedPwr', 'var')
     % for fine-grained control of the noise in diagram.m
     power_data = sum(data.^2);
     power_noise = sum(noise_2.^2);
-    ratio = (power_data/power_noise)/10^(deter/10);
+    ratio = (power_data/power_noise)/10^(forcedPwr/10);
     noise_2 = noise_2.*sqrt(ratio);
     alpha = 1; std_dev = 1;
     ebn0(uniqIDX) = snr(data, noise_2);
