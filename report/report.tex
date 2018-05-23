@@ -155,7 +155,7 @@ Cette séquence consiste premièrement en 4 oscillations de symboles opposés $(
 L'intérêt de cette séquence est de constater la réponse du canal aux plus hautes fréquences du signal, et l'amplitude RMS d'un message constant.
 Cette séquence de départ est aisément distinguable à la figure~\ref{fig:comparaison}.
 
-Après l'ajout de la séquence de départ, les bits sont codés dans un code PAM-2 où les 0 deviennent $-1$ et les 1 restent 1.
+Après l'ajout de la séquence de départ, les bits sont codés dans un code BPSK où les 0 deviennent $-1$ et les 1 restent 1.
 
 \subsubsection{Cosinus surélevé}
 Afin de diviser le spectre fréquentiel pour y définir des canaux, il faut s'assurer que les messages envoyés se limite à leur bande allouée.
@@ -321,13 +321,59 @@ La figure~\ref{fig:decimate} présente un exemple de capture d'échantillons eff
 \end{figure}
 
 
+\clearpage
 %%%%%%%%%%%%%%%%%%%%%%
 \section{Performances}
+Dans le cas d'un code BPSK, la relation $E_b/N_0$ au SNR s'écrit
+\footnote{\url{https://nl.mathworks.com/help/comm/ug/awgn-channel.html}}
+\begin{align}
+	\frac{E_b}{N_0} + 10\log_{10}\left(\frac{R_b}{B}\right) = \text{SNR}_\text{dB}
+\end{align}
+Où sont définies les variables
+\begin{description}[font=\rm,itemindent=1em,labelwidth=2em]
+	\item[$E_b$] l'énergie d'un bit
+	\item[$N_0$] la puissance du bruit pour un spectre partant de 0 à l'infini
+	\item[$R_b$] le taux  de transmission des bits
+	\item[$B$] la largueur de bande utilisée
+	\item[SNR] le rapport de puissance $P_{\text{signal}}/
+		P_{\text{noise}}$ en decibels
+\end{description}
+Puisque dans notre cas $R_b = B$, cela implique que $\log_{10}(R_b/B) = 0$, et nous pouvons l'ôter de l'équation pour ne laisser que la relation
+\begin{equation}
+	\frac{E_b}{N_0} = \text{SNR}_\text{dB}
+	\label{eqn:ebn0-snr}
+\end{equation}
+Cette relation nous facilite grandement le calcul de $E_b/N_0$, nécessaire pour réaliser un diagramme BER.
+
+Le diagramme BER, ou diagramme Bit-Error-Rate, est un digramme présentant le rapport du nombre de bits erronés reçus dans un interval de temps étudié, en fonction du rapport d'énergie d'un bit sur le bruit $E_b/N_0$.
+Pour dessiner ce diagramme, nous désirons fixer un $E_b/N_0$ en abscisse, et reporter son taux d'erreur en l'ordonnée.
+Mais encore faut-il savoir fixer un $E_b/N_0$.
+C'est ici que l'équation~(\ref{eqn:ebn0-snr}) vient grandement nous aider car elle nous permet de fixer un $E_b/N_0$ en modifiant l'amplitude du bruit simulé.
+\begin{gather}
+	\intertext{Depuis la formule du SNR qui \underline{n'est pas} exprimée en decibels}
+	\text{SNR} = \frac{P_\text{signal}}{P_\text{noise}}
+		= \frac{\sum_{n=0}^{N}\text{signal}[n]^2}{\sum_{n=0}^{N}\text{noise}[n]^2}
+	\intertext{Et connaissant le rapport de puissance que nous souhaitons obtenir}
+	10^{\left(\text{dB}/10\right)} = \text{SNR}
+	\intertext{Nous pouvons calculer une ratio qui nous amène au niveau de bruit désiré}
+	\text{ratio} = \frac{\text{SNR}}{10^{\left(\text{dB}/10\right)}}
+	\intertext{Et nous normalisons le bruit en le multipliant par la racine de ce ratio pour arriver au SNR voulu}
+	\text{noise leveled} = \text{noise} \times \sqrt{\text{ratio}}
+\end{gather}
+Cette operation s'effectue dans le fichier \texttt{channel.m}.
+
+Nous pouvons dès lors tracer le diagramme BER de notre méthode de transmission en lui adjoignant le BER mathématiquement optimal d'une modulation BPSK défini par l'équation~\ref{eqn:best-ber}. Cette relation est donnée et acceptée.
+\begin{equation}
+	\text{BER}_\text{BPSK} = \frac{1}{2}\,\text{erfc}\left(\sqrt{\frac{E_b}{N_0}}\right)
+	\label{eqn:best-ber}
+\end{equation}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Problèmes connus}
 
+\begin{table}[!ht]
+\centering
 \begin{tabular}{l|llll}
 & \bf Canal 1 & \bf Canal 2 & \bf Canal 3 & \bf Canal 4\\
 \hline
@@ -336,6 +382,8 @@ La figure~\ref{fig:decimate} présente un exemple de capture d'échantillons eff
 \bf 3 actifs & 0.3918 & 0.4706 & 0.4703 & n/a\\
 \bf 4 actifs & 0.3762 & 0.5279 & 0.4161 & 0.5271
 \end{tabular}
+\caption{Taux d'erreur moyen variant selon le nombre de canaux actifs.}
+\end{table}
 
 %%%%%%%%%%%%%%%%%%%%
 \phantomsection
