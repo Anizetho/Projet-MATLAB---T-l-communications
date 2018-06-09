@@ -155,7 +155,7 @@ Cette séquence consiste premièrement en 4 oscillations de symboles opposés $(
 L'intérêt de cette séquence est de constater la réponse du canal aux plus hautes fréquences du signal, et l'amplitude RMS d'un message constant.
 Cette séquence de départ est aisément distinguable à la figure~\ref{fig:comparaison}.
 
-Après l'ajout de la séquence de départ, les bits sont codés dans un code BPSK où les 0 deviennent $-1$ et les 1 restent 1.
+Après l'ajout de la séquence de départ, les bits sont codés dans un code PAM-2 où les 0 deviennent $-1$ et les 1 restent 1.
 
 \subsubsection{Cosinus surélevé}
 Afin de diviser le spectre fréquentiel pour y définir des canaux, il faut s'assurer que les messages envoyés se limite à leur bande allouée.
@@ -324,7 +324,7 @@ La figure~\ref{fig:decimate} présente un exemple de capture d'échantillons eff
 \clearpage
 %%%%%%%%%%%%%%%%%%%%%%
 \section{Performances}
-Dans le cas d'un code BPSK, la relation $E_b/N_0$ au SNR s'écrit
+Dans le cas d'un code PAM-2, la relation $E_b/N_0$ au SNR s'écrit
 \footnote{\url{https://nl.mathworks.com/help/comm/ug/awgn-channel.html}}
 \begin{align}
 	\frac{E_b}{N_0} + 10\log_{10}\left(\frac{R_b}{B}\right) = \text{SNR}_\text{dB}
@@ -362,9 +362,9 @@ C'est ici que l'équation~(\ref{eqn:ebn0-snr}) vient grandement nous aider car e
 \end{gather}
 Cette operation s'effectue dans le fichier \texttt{channel.m}.
 
-Nous pouvons dès lors tracer le diagramme BER de notre méthode de transmission en lui adjoignant le BER mathématiquement optimal d'une modulation BPSK défini par l'équation~\ref{eqn:best-ber}. Cette relation est donnée et acceptée.
+Nous pouvons dès lors tracer le diagramme BER de notre méthode de transmission en lui adjoignant le BER mathématiquement optimal d'une modulation PAM-2 défini par l'équation~\ref{eqn:best-ber}. Cette relation est donnée et acceptée.
 \begin{equation}
-	\text{BER}_\text{BPSK} = \frac{1}{2}\,\text{erfc}\left(\sqrt{\frac{E_b}{N_0}}\right)
+	\text{BER}_\text{PAM-2} = \frac{1}{2}\,\text{erfc}\left(\sqrt{\frac{E_b}{N_0}}\right)
 	\label{eqn:best-ber}
 \end{equation}
 

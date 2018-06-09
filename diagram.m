@@ -20,3 +20,5 @@ for uniqIDX = 1:tries
     main;
     BER(uniqIDX) = sum(errorRate)/N;
 end
+
+hold on, semilogy(ebn0, BER), hold off
