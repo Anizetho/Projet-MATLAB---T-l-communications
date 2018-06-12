@@ -327,21 +327,21 @@ La figure~\ref{fig:decimate} présente un exemple de capture d'échantillons eff
 Dans le cas d'un code PAM-2, la relation $E_b/N_0$ au SNR s'écrit
 \footnote{\url{https://nl.mathworks.com/help/comm/ug/awgn-channel.html}}
 \begin{align}
-	\frac{E_b}{N_0} + 10\log_{10}\left(\frac{R_b}{B}\right) = \text{SNR}_\text{dB}
+    \frac{E_b}{N_0} + 10\log_{10}\left(\frac{R_b}{B}\right) = \text{SNR}_\text{dB}
 \end{align}
 Où sont définies les variables
 \begin{description}[font=\rm,itemindent=1em,labelwidth=2em]
-	\item[$E_b$] l'énergie d'un bit
-	\item[$N_0$] la puissance du bruit pour un spectre partant de 0 à l'infini
-	\item[$R_b$] le taux  de transmission des bits
-	\item[$B$] la largueur de bande utilisée
-	\item[SNR] le rapport de puissance $P_{\text{signal}}/
-		P_{\text{noise}}$ en decibels
+    \item[$E_b$] l'énergie d'un bit
+    \item[$N_0$] la puissance du bruit pour un spectre partant de 0 à l'infini
+    \item[$R_b$] le taux  de transmission des bits
+    \item[$B$] la largueur de bande utilisée
+    \item[SNR] le rapport de puissance $P_{\text{signal}}/
+        P_{\text{noise}}$ en decibels
 \end{description}
 Puisque dans notre cas $R_b = B$, cela implique que $\log_{10}(R_b/B) = 0$, et nous pouvons l'ôter de l'équation pour ne laisser que la relation
 \begin{equation}
-	\frac{E_b}{N_0} = \text{SNR}_\text{dB}
-	\label{eqn:ebn0-snr}
+    \frac{E_b}{N_0} = \text{SNR}_\text{dB}
+    \label{eqn:ebn0-snr}
 \end{equation}
 Cette relation nous facilite grandement le calcul de $E_b/N_0$, nécessaire pour réaliser un diagramme BER.
 
@@ -350,22 +350,22 @@ Pour dessiner ce diagramme, nous désirons fixer un $E_b/N_0$ en abscisse, et re
 Mais encore faut-il savoir fixer un $E_b/N_0$.
 C'est ici que l'équation~(\ref{eqn:ebn0-snr}) vient grandement nous aider car elle nous permet de fixer un $E_b/N_0$ en modifiant l'amplitude du bruit simulé.
 \begin{gather}
-	\intertext{Depuis la formule du SNR qui \underline{n'est pas} exprimée en decibels}
-	\text{SNR} = \frac{P_\text{signal}}{P_\text{noise}}
-		= \frac{\sum_{n=0}^{N}\text{signal}[n]^2}{\sum_{n=0}^{N}\text{noise}[n]^2}
-	\intertext{Et connaissant le rapport de puissance que nous souhaitons obtenir}
-	10^{\left(\text{dB}/10\right)} = \text{SNR}
-	\intertext{Nous pouvons calculer une ratio qui nous amène au niveau de bruit désiré}
-	\text{ratio} = \frac{\text{SNR}}{10^{\left(\text{dB}/10\right)}}
-	\intertext{Et nous normalisons le bruit en le multipliant par la racine de ce ratio pour arriver au SNR voulu}
-	\text{noise leveled} = \text{noise} \times \sqrt{\text{ratio}}
+    \intertext{Depuis la formule du SNR qui \underline{n'est pas} exprimée en decibels}
+    \text{SNR} = \frac{P_\text{signal}}{P_\text{noise}}
+        = \frac{\sum_{n=0}^{N}\text{signal}[n]^2}{\sum_{n=0}^{N}\text{noise}[n]^2}
+    \intertext{Et connaissant le rapport de puissance que nous souhaitons obtenir}
+    10^{\left(\text{dB}/10\right)} = \text{SNR}
+    \intertext{Nous pouvons calculer une ratio qui nous amène au niveau de bruit désiré}
+    \text{ratio} = \frac{\text{SNR}}{10^{\left(\text{dB}/10\right)}}
+    \intertext{Et nous normalisons le bruit en le multipliant par la racine de ce ratio pour arriver au SNR voulu}
+    \text{noise leveled} = \text{noise} \times \sqrt{\text{ratio}}
 \end{gather}
 Cette operation s'effectue dans le fichier \texttt{channel.m}.
 
 Nous pouvons dès lors tracer le diagramme BER de notre méthode de transmission en lui adjoignant le BER mathématiquement optimal d'une modulation PAM-2 défini par l'équation~\ref{eqn:best-ber}. Cette relation est donnée et acceptée.
 \begin{equation}
-	\text{BER}_\text{PAM-2} = \frac{1}{2}\,\text{erfc}\left(\sqrt{\frac{E_b}{N_0}}\right)
-	\label{eqn:best-ber}
+    \text{BER}_\text{PAM-2} = \frac{1}{2}\,\text{erfc}\left(\sqrt{\frac{E_b}{N_0}}\right)
+    \label{eqn:best-ber}
 \end{equation}
 
 
@@ -391,6 +391,26 @@ Nous pouvons dès lors tracer le diagramme BER de notre méthode de transmission
 \addcontentsline{toc}{section}{Conclusion}
 
 \appendix
+\clearpage
+
+\section{Figures arbitraires}
+\label{sec:uncommented-figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[height=0.4\textheight]{eps/startSeq-comparaison.eps}
+    \caption{Atténuation de l'amplitude de la séquence de départ perçue
+             dans le receveur.}
+\end{figure}
+\vfill
+\begin{figure}[!h]
+    \centering
+    \includegraphics[height=0.4\textheight]{eps/noised.eps}
+    \caption{Sortie des filtres dans le receveur servant à séparer les canaux
+             fréquentiels, dans le cas d'un signal fortement bruité.
+             Cette figure permet de montrer les limites de bande passante des
+             filtres.}
+\end{figure}
 \clearpage
 
 \section{Fichiers sources}
