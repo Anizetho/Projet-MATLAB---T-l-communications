@@ -386,27 +386,45 @@ Nous pouvons dès lors tracer le diagramme BER de notre méthode de transmission
 \end{figure}
 La figure~\ref{fig:ber-curve} présente le diagramme BER mathématiquement optimal calculé depuis la fonction d'erreur~\ref{eqn:best-ber}, et le diagramme BER de notre projet évalué dans MATLAB.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Problèmes connus}
-
-\begin{table}[!ht]
-\centering
-\begin{tabular}{l|llll}
-& \bf Canal 1 & \bf Canal 2 & \bf Canal 3 & \bf Canal 4\\
-\hline
-\bf 1 actif  & 0.4310 & n/a    & n/a    & n/a\\
-\bf 2 actifs & 0.4101 & 0.4456 & n/a    & n/a\\
-\bf 3 actifs & 0.3918 & 0.4706 & 0.4703 & n/a\\
-\bf 4 actifs & 0.3762 & 0.5279 & 0.4161 & 0.5271
-\end{tabular}
-\caption{Taux d'erreur moyen variant selon le nombre de canaux actifs.}
-\end{table}
-
-%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%
 \phantomsection
 \section*{Conclusion}
 \addcontentsline{toc}{section}{Conclusion}
+À la fin du projet nous avons rencontrons plusieurs comportements non attendus.
+Le premier est le gain en tension du premier canal fréquentiel survenant après démodulation dans le récepteur.
+Cet effet est constatable à la figure~\ref{fig:comparaison}.
+Ce gain pourrait venir du filtrage.
 
+Un second problème vient de la modulation des impulsions de mise en forme.
+Multiplier par certaines fréquences a pour effet que le signal est inversé à moment de l'échantillonnage.
+Cet effet peut se voir sur la figure~\ref{fig:impulse} sur le canal 2.
+
+Un troisième problème est la chute du taux d'erreur qui est beaucoup plus lente que prévus.
+Cet effet peut se constater sur la figure~\ref{fig:ber-curve}.
+Notre taux d'erreur est même supérieur à l'optimal mathématique avant \SI{2.5}{\decibel}.
+
+Le dernier problème est apparu quand nous avons cherché à comprendre le 3\up{ème} problème.
+Le taux d'erreur sur un canal varie selon le nombre de canal actif présent, et ce de manière arbitraire.
+Le tableau~\ref{tab:ber-per-channel} présente des mesures que nous avons relevées.
+On peut constater que le taux d'erreur dans le canal 1 baisse au fur et à mesure que nous rajoutons des canaux.
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{l|llll}
+    & \bf Canal 1 & \bf Canal 2 & \bf Canal 3 & \bf Canal 4\\
+    \hline
+    \bf 1 actif  & 0.4310 & n/a    & n/a    & n/a\\
+    \bf 2 actifs & 0.4101 & 0.4456 & n/a    & n/a\\
+    \bf 3 actifs & 0.3918 & 0.4706 & 0.4703 & n/a\\
+    \bf 4 actifs & 0.3762 & 0.5279 & 0.4161 & 0.5271
+    \end{tabular}
+    \caption{Taux d'erreur moyen variant selon le nombre de canaux actifs.}
+    \label{tab:ber-per-channel}
+\end{table}
+
+Malgré l'imperfection de notre simulation, nous parvenons à transmettre plusieurs signaux avec des taux d'erreurs relativement faible pour un SNR réaliste supérieur à \SI{10}{\decibel}.
+
+%%%%%%%%%
 \appendix
 \clearpage
 
