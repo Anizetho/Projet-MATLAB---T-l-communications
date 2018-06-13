@@ -35,10 +35,15 @@ end
 
 % filter the canal noise with the adequate filter
 s2 = conv2(rcos, 1, s2);
+[len3,~] = size(s2);
 % find filters delay
 [~,i] = max(H);
 % compensate the start trame
-s2t = s2(span*beta+i+shift-1:end, :);
+s2t = zeros(len3,N);
+for n = 1:N
+    delay = span*beta+i(n)+shift-n;
+    s2t(1:len3-delay+1,n) = s2(delay:end,n);
+end
 % generate the index vector
 s2i = 1:beta:beta*size(x,1);
 % extract the values at index
