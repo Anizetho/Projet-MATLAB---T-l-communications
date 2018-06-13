@@ -136,7 +136,11 @@ Ce pic souffrira donc plus fortement au filtrage fréquentiel.
              Le signal reçu est décalé d'approximativement 1 seconde par rapport au signal
              émis.
              Le signal reçu est également plus sévèrement atténué aux pics isolés qui
-             contiennent des plus hautes fréquences.}
+             contiennent des plus hautes fréquences.
+             Le rapport d'amplitude n'est pas conservé car le receveur ne tente pas de
+             compenser la perte de tension dans le canal.
+             À la place le signal est juste normalisé à \SI{200}{\milli\watt} avant
+             d'être émis.}
     \label{fig:comparaison}
 \end{figure}
 
@@ -236,7 +240,7 @@ Un exemple de ce récapitulatif est présenté à la figure~\ref{fig:sender}.
 
 \begin{figure}[p]
     \centering
-    \includegraphics[height=0.45\textheight]{eps/sender.eps}
+    \includegraphics[height=0.4\textheight]{eps/sender.eps}
     \caption{Signaux de 50 bits chacun envoyés sur 2 canaux fréquentiels au rythme de 10 bit/s
              avec une fréquence d'échantillonage de \SI{80}{\hertz}.}
     \label{fig:sender}
@@ -277,21 +281,24 @@ En procédant de cette manière, nous contournons le problème d'estimation de l
     \centering
     \includegraphics[height=0.4\textheight]{eps/filters.eps}
     \caption{Réponse en amplitude des filtres de type Butterworth utilisés dans le receveur
-             pour séparer les canaux.}
+             pour séparer les canaux.
+             Leurs pentes se rencontrent à \SI{-3}{\decibel}.}
     \label{fig:filters}
 \end{figure}
 
 \begin{figure}[p]
     \centering
-    \includegraphics[height=0.45\textheight]{eps/grpdelay.eps}
+    \includegraphics[height=0.4\textheight]{eps/grpdelay.eps}
     \caption{Retard de groupe des filtres de type Butterworth utilisés dans le receveur
              pour séparer les canaux.
-             Le filtre 1 est un lowpass avec une fréquence de coupure à \SI{10}{\hertz}.
-             Le filtre 2 est un bandpass avec une fréquence de coupure basse à
-             \SI{25}{\hertz} et fréquence de coupure haute à \SI{35}{\hertz}.}
+             Le filtre 1 est un passe-bas avec une fréquence de coupure à \SI{1}{\mega\hertz}.
+             Le filtre 2 est un passe-bande avec une fréquence de coupure basse à
+             \SI{1}{\mega\hertz} et fréquence de coupure haute à \SI{3}{\mega\hertz}.
+             Le filtre 2 est d'un degré double par rapport au 1 pour obtenir une pente
+             semblable en amplitude. Cela se ressent dans le retard de groupe par une
+             augmentation.}
     \label{fig:grpdelay}
 \end{figure}
-
 
 \subsubsection{Comparaison}
 Le script receveur affiche un récapitulatif de la transmission reçue, comme l'émetteur affiche une récapitulatif de la transmission envoyée.
@@ -301,7 +308,7 @@ On peut constater que : temporellement le receveur a un message décalé de quel
 
 \begin{figure}[p]
     \centering
-    \includegraphics[height=0.45\textheight]{eps/receiver.eps}
+    \includegraphics[height=0.4\textheight]{eps/receiver.eps}
     \caption{Signaux de 50 bits chacun envoyés sur 2 canaux fréquentiels au rythme de 10 bit/s
              avec une fréquence d'échantillonage de \SI{80}{\hertz}.}
     \label{fig:receiver}
@@ -315,7 +322,7 @@ La figure~\ref{fig:decimate} présente un exemple de capture d'échantillons eff
 
 \begin{figure}[p]
     \centering
-    \includegraphics[height=0.45\textheight]{eps/decimate.eps}
+    \includegraphics[height=0.4\textheight]{eps/decimate.eps}
     \caption{Visualisation de la capture d'échantillons pour le décideur.}
     \label{fig:decimate}
 \end{figure}
@@ -367,7 +374,17 @@ Nous pouvons dès lors tracer le diagramme BER de notre méthode de transmission
     \text{BER}_\text{PAM-2} = \frac{1}{2}\,\text{erfc}\left(\sqrt{\frac{E_b}{N_0}}\right)
     \label{eqn:best-ber}
 \end{equation}
-
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[height=0.4\textheight]{eps/ber-curve.eps}
+    \caption{Courbe du taux d'erreur par bit BER en fonction de l'énergie par bit
+             $E_b/N_0$, aussi appelé SNR par bit.
+             La figure reprend la courbe optimale mathématiquement et la courbe évaluée
+             grâce à MATLAB. La courbe évaluée se comporte étonnement en faisant mieux
+             que l'optimum théorique avant \SI{2.5}{\decibel} et pire après.}
+    \label{fig:ber-curve}
+\end{figure}
+La figure~\ref{fig:ber-curve} présente le diagramme BER mathématiquement optimal calculé depuis la fonction d'erreur~\ref{eqn:best-ber}, et le diagramme BER de notre projet évalué dans MATLAB.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Problèmes connus}
