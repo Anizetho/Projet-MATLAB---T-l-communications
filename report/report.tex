@@ -435,17 +435,39 @@ Malgré l'imperfection de notre simulation, nous parvenons à transmettre plusie
     \centering
     \includegraphics[height=0.4\textheight]{eps/startSeq-comparaison.eps}
     \caption{Atténuation de l'amplitude de la séquence de départ perçue
-             dans le receveur.}
+             dans le receveur.
+             Si l'amplitude de la séquence du premier canal reste constante après
+             transmission, cela n'est pas du tout vrai pour le second où la perte
+             de tension n'est pas homogène.
+             Ce défaut nous a empêché d'implémenter un mécanisme de normalisation
+             à l'entrée du receveur basé sur la séquence de départ.}
 \end{figure}
 \vfill
 \begin{figure}[!h]
     \centering
-    \includegraphics[height=0.4\textheight]{eps/noised.eps}
+    \includegraphics[height=0.35\textheight]{eps/noised.eps}
     \caption{Sortie des filtres dans le receveur servant à séparer les canaux
              fréquentiels, dans le cas d'un signal fortement bruité.
              Cette figure permet de montrer les limites de bande passante des
              filtres.}
 \end{figure}
+% second page
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[height=0.4\textheight]{eps/eyediagram1.eps}
+    \caption{Diagramme de l'œil pour le canal 1 sans bruit ajouté.
+             On constate que les transitions ne sont pas homogènes malgré l'absence
+             du bruit de canal.}
+\end{figure}
+\vfill
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[height=0.4\textheight]{eps/eyediagram2.eps}
+    \caption{Diagramme de l'œil pour le canal 2 sans bruit ajouté.
+             On constate que les transitions ne sont pas homogènes malgré l'absence
+             du bruit de canal.}
+\end{figure}
+
 \clearpage
 
 \section{Fichiers sources}
