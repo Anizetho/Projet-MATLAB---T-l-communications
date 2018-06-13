@@ -12,3 +12,6 @@
 *.md5
 *.dpth
 */_minted-report/*
+# 2big2git
+report/eps/eyediagram1.fig
+report/eps/eyediagram2.fig
