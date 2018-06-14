@@ -94,7 +94,7 @@
 \phantomsection
 \section*{Introduction}
 \addcontentsline{toc}{section}{Introduction}
-L'objectif de ce projet est de simuler la couche physique d'un protocol de communication, c'est-à-dire le niveau 1 du modèle OSI.
+L'objectif de ce projet est de simuler la couche physique d'un protocole de communication, c'est-à-dire le niveau 1 du modèle OSI.
 La simulation est réalisée à l'aide du logiciel MATLAB\textregistered{} édité par Mathworks\textregistered{}.
 Une contrainte imposée dans la simulation est de tenir compte de plusieurs émetteurs et receveurs pouvant communiquer simultanément.
 Pour répondre à cette contrainte, la couche physique implémentée utilise le multiplexage fréquentiel.
@@ -118,13 +118,13 @@ Ils consistent en :
 \end{description}
 
 \subsection{Fichier principale}
-Le fichier principale, nommé \texttt{main.m} par son nom anglais et consultable à l'annexe~\ref{app:main}, se charge principalement de lancer les scripts composant la simulation dans un ordre logique.
+Le fichier principal, nommé \texttt{main.m} par son nom anglais et consultable à l'annexe~\ref{app:main}, se charge principalement de lancer les scripts composants la simulation dans un ordre logique.
 Son contenu est minime, il commence par nettoyer le plan de travail des variables et figures résiduelles.
 Il lance ensuite les scripts dans l'ordre : \texttt{parameters.m} $\rightarrow$ \texttt{sender.m} $\rightarrow$ \texttt{channel.m} $\rightarrow$ \texttt{receiver.m}.
 
 Une fois la simulation terminée, il affiche également une figure comparant le signal dans un canal émis par l'émetteur, au signal recomposé dans ce même canal par le receveur.
 La figure~\ref{fig:comparaison} présente un exemple de cette comparaison.
-On peut y apercevoir que le signal recomposé est délayé par rapport au signal émis, et que ses amplitudes aux pics isolés est quasiment divisées par deux.
+On peut y apercevoir que le signal recomposé est délayé par rapport au signal émis, et que ses amplitudes aux pics isolés sont quasiment divisées par deux.
 Cela est normal étant donné que l'on retrouve plus de fréquence dans un pic isolé que dans une succession à la même amplitude.
 Ce pic souffrira donc plus fortement au filtrage fréquentiel.
 
@@ -145,12 +145,12 @@ Ce pic souffrira donc plus fortement au filtrage fréquentiel.
 \end{figure}
 
 \subsection{Paramètres}
-Le fichier \texttt{parameters.m}, consultable à l'annexe~\ref{app:paremeters}, offre un accès rapide et concentré aux différents paramètres influençant la simulation tel que la quantité de canaux fréquentiel disponibles, la taille du message à envoyer, ou encore la vitesse d'envoie.
-Chaque paramètre est accompagné d'un commentaire expliquant dument son utilité.
+Le fichier \texttt{parameters.m}, consultable à l'annexe~\ref{app:paremeters}, offre un accès rapide et concentré aux différents paramètres influençant la simulation tel que la quantité de canaux fréquentiels disponibles, la taille du message à envoyer, ou encore la vitesse d'envoi.
+Chaque paramètre est accompagné d'un commentaire expliquant dûment son utilité.
 
 \subsection{Émetteur}
 Le fichier \texttt{emetteur.m}, consultable à l'annexe~\ref{app:sender}, commence la simulation proprement dite.
-Il débute par générer une séquence de bits aléatoire suivant une distribution normale grâce à \mintinline{matlab}{randn()}.
+Il débute par générer une séquence de bits aléatoires suivant une distribution normale grâce à \mintinline{matlab}{randn()}.
 
 \subsubsection{Séquence de départ}
 Il rajoute une séquence de départ pour la forme uniquement.
@@ -162,25 +162,25 @@ Cette séquence de départ est aisément distinguable à la figure~\ref{fig:comp
 Après l'ajout de la séquence de départ, les bits sont codés dans un code PAM-2 où les 0 deviennent $-1$ et les 1 restent 1.
 
 \subsubsection{Cosinus surélevé}
-Afin de diviser le spectre fréquentiel pour y définir des canaux, il faut s'assurer que les messages envoyés se limite à leur bande allouée.
-Pour ce faire nous pouvons utiliser le filtre en sinus cardinal qui à la merveilleuse propriété que pour un signal avec un durée de symbole de $T_b$ seconde, il ne consommera que $\frac{1}{2T_b}$ largeur de spectre dans le domaine fréquentiel.
-C'est mathématiquement la meilleur efficacité spectrale atteignable.
+Afin de diviser le spectre fréquentiel pour y définir des canaux, il faut s'assurer que les messages envoyés se limitent à leur bande allouée.
+Pour ce faire nous pouvons utiliser le filtre en sinus cardinal qui à la merveilleuse propriété que pour un signal avec une durée de symbole de $T_b$ secondes, il ne consommera que $\frac{1}{2T_b}$ largeur de spectre dans le domaine fréquentiel.
+C'est mathématiquement la meilleure efficacité spectrale atteignable.
 
 Un soucis survient avec l'utilisation de ce filtre en pratique, c'est que le signal codé maintient son amplitude maximale, dénommée plafond, durant un bref instant puis chute brusquement.
 Ce type de réponse n'est pas utilisable en pratique car la fréquence de capture d'échantillons dans le receveur n'est ni monotone, ni même en phase.
 Pour adresser ce problème, nous utilisons une version alternative du sinus cardinal nommée le filtre en cosinus surélevé.
-Ce filtre a la particularité de maintenir son plafond plus longtemps, mais aux prix de flancs montant et descendant plus raides car la période d'expression d'un symbole n'est pas augmentée.
-Ces flancs plus raides entrainent une plus grand consommation de bande spectrale.
-Le cosinus surélevé défini une largeur de bande consommée $1+\alpha$ avec \alpha{} dénommé \og{}facteur de roll-off\fg{} compris dans l'interval $0\leq\alpha\leq1$.
+Ce filtre a la particularité de maintenir son plafond plus longtemps, mais aux prix de flancs montants et descendants plus raides car la période d'expression d'un symbole n'est pas augmentée.
+Ces flancs plus raides entrainent une plus grande consommation de bande spectrale.
+Le cosinus surélevé définit une largeur de bande consommée $1+\alpha$ avec \alpha{} dénommé \og{}facteur de roll-off\fg{} compris dans l'intervalle $0\leq\alpha\leq1$.
 Un $\alpha = 0$ rend le filtre égale à celui d'un sinus cardinal.
 Ce facteur contrôle le temps de plafond d'un symbole dans le domaine temporel.
 Dans notre implémentation, nous avons choisi un facteur $\alpha = \num{0.4}$ arbitrairement.
 
 \subsubsection{Sur-échantillonnage}
-La description du filtre précédemment faite s'applique au domaine continue.
+La description du filtre précédemment faite s'applique au domaine continu.
 Quand nous passons dans le domaine discret, le temps d'échantillonnage doit être pris en compte.
-Si nous n'utilisons qu'un seul échantillon pour convoluer le filtre en cosinus surélevé, sa réponse impulsionnelle sera semblable à une impulsion de Dirac, avec un consommation fréquentielle infinie, ce qui est l'opposé de ce qui est désiré.
-Et si nous utilisons une infinité d'échantillon, nous obtiendrons une réponse parfaite semblable au domaine continue.
+Si nous n'utilisons qu'un seul échantillon pour convoluer le filtre en cosinus surélevé, sa réponse impulsionnelle sera semblable à une impulsion de Dirac, avec une consommation fréquentielle infinie, ce qui est l'opposé de ce qui est désiré.
+Et si nous utilisons une infinité d'échantillons, nous obtiendrons une réponse parfaite semblable au domaine continue.
 Connaissant les extrémités, nous nous intéressons à savoir combien d'échantillons au minimum sont nécessaires pour garder les spectres de différents canaux séparés.
 L'équation~(\ref{eqn:calcule-de-beta-final}) répond à cette question.
 En partant de l'équation~(\ref{eqn:calcule-de-beta-initial}) qui fixe les contraintes.
@@ -203,13 +203,13 @@ Puisque le premier canal non-modulé sera \og{}single-sideband\fg{} $\frac{1}{2T
 \end{align}
 Et puisque nous n'aimons pas ce qui n'est pas linéaire, nous prenons dans la simulation $\beta = 4N$.
 
-Un dernier paramètre à décider dans la construction du filtre numérique et la longueur de la réponse impulsionnelle qui va servir à convoluer le signal.
-Pour que le filtrage respecte parfaitement les caractéristiques que nous lui avons défini, il lui faut une longueur infini.
+Un dernier paramètre à décider dans la construction du filtre numérique est la longueur de la réponse impulsionnelle qui va servir à convoluer le signal.
+Pour que le filtrage respecte parfaitement les caractéristiques que nous lui avons défini, il lui faut une longueur infinie.
 Ceci n'étant pas possible en pratique, la réponse doit être tronquée tout en gardant le maximum de puissance.
 Par essaies empiriques, nous avons déterminé que 20 fois le taux de sur-échantillonnage est une bonne valeur.
 
 \subsubsection{Modulation}
-Les filtres générés et leur réponse impulsionnelle obtenues, nous les modulons par les porteuses avant d'être convolués avec le signal.
+Les filtres générés et leurs réponses impulsionnelles obtenues, nous les modulons par les porteuses avant d'être convolués avec le signal.
 Les fréquences des porteuses sont obtenues en séparant chaque canal par $\frac{1}{2Tb}$
 Nous obtenons les impulsions présentées à la figure~\ref{fig:impulse}.
 Cette figure présente les 3 impulsions nécessaires pour multiplexer en 3 canaux.
@@ -248,13 +248,13 @@ Un exemple de ce récapitulatif est présenté à la figure~\ref{fig:sender}.
 
 \subsection{Canal}
 Le fichier \texttt{canal.m}, consultable à l'annexe~\ref{app:channel}, à pour mission de simuler les effets du canal de communication.
-Nous nous attendons à ce qu'il se comporte comme un filtre passe-bas, c.-à-d. une atténuation des amplitudes et un décalage temporelle.
+Nous nous attendons à ce qu'il se comporte comme un filtre passe-bas, c.-à-d. une atténuation des amplitudes et un décalage temporel.
 Tout cela accompagné de bruit parasite.
 
-Nous nous attendons à ce que le bruit sois de type AWGN, Additive White Gaussian Noise, pouvant être symbolisé par une variable aléatoire de distribution normale et de moyenne nulle $g[k]\sim\mathcal{N}(0,\sigma^2)$.
-Tout commence par la génération d'un vecteur aléatoire de distribution normale de même taille que le vecteur de donnée.
-Ce vecteur aléatoire est ensuite filtré pour ne pas contenir de fréquence supérieure à celle de Nyquist.
-L'intensité du bruit se règle en multipliant le vecteur obtenu par l'écart-type de la variance désirée.
+Nous nous attendons à ce que le bruit soit de type AWGN, Additive White Gaussian Noise, pouvant être symbolisé par une variable aléatoire de distribution normale et de moyenne nulle $g[k]\sim\mathcal{N}(0,\sigma^2)$.
+Tout commence par la génération d'un vecteur aléatoire de distribution normale de même taille que le vecteur de données.
+Ce vecteur aléatoire est ensuite filtré pour ne pas contenir de fréquences supérieures à celle de Nyquist.
+L'intensité du bruit se règle en multipliant le vecteur obtenu, qui est de variance 1, par l'écart-type liée à la variance désirée.
 Un facteur d'atténuation A borné tel que $\num{0.6} \leq A \leq \num{0.9}$ est également généré.
 Le script effectue ensuite $S_2[k] = A \cdot S_1[k] + g[k]$ pour appliquer l'atténuation et le bruit.
 Du \og{}zero-padding\fg{} est ajouté au début du signal pour simuler un décalage temporel.
@@ -265,16 +265,16 @@ Le fichier \texttt{receiver.m}, consultable à l'annexe~\ref{app:receiver}, se c
 \subsubsection{Filtrage}
 Le script commence par générer des filtres de type Butterworth qui vont lui permettre de séparer les canaux.
 Pour filtrer, on commence par obtenir la fraction polynomiale représentant le filtre analogique.
-De cette fonction, on calcule la réponse fréquentiel entre la fréquence 0 et la fréquence d'échantillonnage.
-On applique la transformé de Fourier inverse à cette réponse fréquentiel, et nous obtenons la réponse impulsionnelle du filtre.
+De cette fonction, on calcule la réponse fréquentielle entre la fréquence 0 et la fréquence d'échantillonnage.
+On applique la transformée de Fourier inverse à cette réponse fréquentielle, et nous obtenons la réponse impulsionnelle du filtre.
 Il suffit dès lors de convoluer les échantillons temporels de notre signal avec les réponses impulsionnelles calculées et nous séparons ainsi les bandes spectrales.
-Nous calculons des filtres d'ordre 10, la figure~\ref{fig:filters} et \ref{fig:grpdelay} présentent les filtres permettant des séparer les deux canaux utilisé dans cette simulation.
+Nous calculons des filtres d'ordre 10, la figure~\ref{fig:filters} et \ref{fig:grpdelay} présentent les filtres permettant de séparer les deux canaux utilisés dans cette simulation.
 
 \subsubsection{Démodulation}
 Une fois les canaux séparés, il faut les ramener en bande de base.
 On ne peut pas simplement diviser les signaux pas un cosinus de même fréquence que la porteuse car le déphasage entre les deux laisserait une composante sinusoïdale parasite dans nos échantillons démodulés.
 Pour obtenir notre signal en bande de base, nous multiplions encore le signal modulé avec un cosinus à même fréquence, multiplier deux cosinus amène à additionner leur fréquence.
-Nous filtrons ensuite ce signal doublement multiplié par un filtre passe-bas pour supprimer les porteuses envoyée dans de plus haute fréquence, et les fréquences restantes sont notre signal en bande de base.
+Nous filtrons ensuite ce signal doublement multiplié par un filtre passe-bas pour supprimer les porteuses envoyées dans de plus hautes fréquences, et les fréquences restantes sont notre signal en bande de base.
 En procédant de cette manière, nous contournons le problème d'estimation de la phase de la porteuse.
 
 \begin{figure}[p]
@@ -302,8 +302,8 @@ En procédant de cette manière, nous contournons le problème d'estimation de l
 
 \subsubsection{Comparaison}
 Le script receveur affiche un récapitulatif de la transmission reçue, comme l'émetteur affiche une récapitulatif de la transmission envoyée.
-Ces récapitulatifs permettent de comparer les signaux émis avant d'être sommé dans l'environnement de transmission, \textit{e.g.} un câble, et les signaux reçus après les avoir séparés par filtrage.
-La figure~\ref{fig:receiver} du receveur doit être comparé avec la figure~\ref{fig:sender} de l'émetteur.
+Ces récapitulatifs permettent de comparer les signaux émis avant d'être sommés dans l'environnement de transmission, \textit{e.g.} un câble, et les signaux reçus après les avoir séparés par filtrage.
+La figure~\ref{fig:receiver} du receveur doit être comparée avec la figure~\ref{fig:sender} de l'émetteur.
 On peut constater que : temporellement le receveur a un message décalé de quelques échantillons ; et fréquentiellement un signal atténué de quelques dBm.
 
 \begin{figure}[p]
@@ -314,10 +314,10 @@ On peut constater que : temporellement le receveur a un message décalé de quel
     \label{fig:receiver}
 \end{figure}
 
-Une fois le signal en bande de base recomposé, le recevoir doit repérer début du signal et capturer un échantillon tous les $T_b$ instant.
+Une fois le signal en bande de base recomposé, le receveur doit repérer le début du signal et capturer un échantillon tous les $T_b$ instant.
 Depuis cet échantillon capturé, il doit prendre la décision de choisir si le code transmis était $+1$ ou $-1$.
 La simulation se permet de calculer le délai généré pour savoir où le signal commence.
-Ceci est possible car nous disposons des réponses en phase de chaque filtres appliqués tout au long des calculs.
+Ceci est possible car nous disposons des réponses en phase de chaque filtre appliqué tout au long des calculs.
 La figure~\ref{fig:decimate} présente un exemple de capture d'échantillons effectuée par le receveur.
 
 \begin{figure}[p]
@@ -352,8 +352,8 @@ Puisque dans notre cas $R_b = B$, cela implique que $\log_{10}(R_b/B) = 0$, et n
 \end{equation}
 Cette relation nous facilite grandement le calcul de $E_b/N_0$, nécessaire pour réaliser un diagramme BER.
 
-Le diagramme BER, ou diagramme Bit-Error-Rate, est un digramme présentant le rapport du nombre de bits erronés reçus dans un interval de temps étudié, en fonction du rapport d'énergie d'un bit sur le bruit $E_b/N_0$.
-Pour dessiner ce diagramme, nous désirons fixer un $E_b/N_0$ en abscisse, et reporter son taux d'erreur en l'ordonnée.
+Le diagramme BER, ou diagramme Bit-Error-Rate, est un digramme présentant le rapport du nombre de bits erronés reçus dans un intervalle de temps étudié, en fonction du rapport d'énergie d'un bit sur le bruit $E_b/N_0$.
+Pour dessiner ce diagramme, nous désirons fixer un $E_b/N_0$ en abscisse, et reporter son taux d'erreur en ordonnée.
 Mais encore faut-il savoir fixer un $E_b/N_0$.
 C'est ici que l'équation~(\ref{eqn:ebn0-snr}) vient grandement nous aider car elle nous permet de fixer un $E_b/N_0$ en modifiant l'amplitude du bruit simulé.
 \begin{gather}
@@ -362,7 +362,7 @@ C'est ici que l'équation~(\ref{eqn:ebn0-snr}) vient grandement nous aider car e
         = \frac{\sum_{n=0}^{N}\text{signal}[n]^2}{\sum_{n=0}^{N}\text{noise}[n]^2}
     \intertext{Et connaissant le rapport de puissance que nous souhaitons obtenir}
     10^{\left(\text{dB}/10\right)} = \text{SNR}
-    \intertext{Nous pouvons calculer une ratio qui nous amène au niveau de bruit désiré}
+    \intertext{Nous pouvons calculer un ratio qui nous amène au niveau de bruit désiré}
     \text{ratio} = \frac{\text{SNR}}{10^{\left(\text{dB}/10\right)}}
     \intertext{Et nous normalisons le bruit en le multipliant par la racine de ce ratio pour arriver au SNR voulu}
     \text{noise leveled} = \text{noise} \times \sqrt{\text{ratio}}
@@ -390,21 +390,21 @@ La figure~\ref{fig:ber-curve} présente le diagramme BER mathématiquement optim
 \phantomsection
 \section*{Conclusion}
 \addcontentsline{toc}{section}{Conclusion}
-À la fin du projet nous avons rencontrons plusieurs comportements non attendus.
+À la fin du projet nous avons rencontré plusieurs comportements non attendus.
 Le premier est le gain en tension du premier canal fréquentiel survenant après démodulation dans le récepteur.
 Cet effet est constatable à la figure~\ref{fig:comparaison}.
 Ce gain pourrait venir du filtrage.
 
 Un second problème vient de la modulation des impulsions de mise en forme.
-Multiplier par certaines fréquences a pour effet que le signal est inversé à moment de l'échantillonnage.
+Multiplier par certaines fréquences a pour effet que le signal est inversé au moment de l'échantillonnage.
 Cet effet peut se voir sur la figure~\ref{fig:impulse} sur le canal 2.
 
-Un troisième problème est la chute du taux d'erreur qui est beaucoup plus lente que prévus.
+Un troisième problème est la chute du taux d'erreur qui est beaucoup plus lente que prévue.
 Cet effet peut se constater sur la figure~\ref{fig:ber-curve}.
 Notre taux d'erreur est même supérieur à l'optimal mathématique avant \SI{2.5}{\decibel}.
 
 Le dernier problème est apparu quand nous avons cherché à comprendre le 3\up{ème} problème.
-Le taux d'erreur sur un canal varie selon le nombre de canal actif présent, et ce de manière arbitraire.
+Le taux d'erreur sur un canal varie selon le nombre de canaux actifs présents, et ce de manière arbitraire.
 Le tableau~\ref{tab:ber-per-channel} présente des mesures que nous avons relevées.
 On peut constater que le taux d'erreur dans le canal 1 baisse au fur et à mesure que nous rajoutons des canaux.
 
